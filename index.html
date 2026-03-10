@@ -51,7 +51,7 @@
             height: 520px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
+            justify-content: center; /* Centered layout */
             align-items: center;
         }
 
@@ -74,22 +74,20 @@
             transform-origin: top; transition: transform 0.6s ease; z-index: 30;
         }
 
-        /* The New Heart on the Flap */
         .flap-heart {
             position: absolute;
-            top: 110px; /* Positioned near the tip of the triangular flap */
+            top: 110px;
             width: 100%;
             text-align: center;
-            color: #b71c1c; /* A deep red for contrast */
+            color: #b71c1c;
             font-size: 28px;
-            z-index: 45; /* Higher than the flap and text */
+            z-index: 45;
             pointer-events: none;
         }
 
-        /* The main text below the heart */
         .marked-text {
             position: absolute;
-            top: 145px; /* Moved slightly down to make room */
+            top: 145px;
             width: 100%;
             text-align: center;
             color: var(--primary);
@@ -153,11 +151,29 @@
 
         /* --- STATES --- */
         .open .flap { transform: rotateX(180deg); z-index: 5; }
-        .open .marked-text { display: none; }
-        .open .flap-heart { display: none; } /* Heart vanishes when opened */
+        .open .marked-text, .open .flap-heart { display: none; }
         .open .letter { opacity: 1; transform: translateY(-160px); height: 380px; z-index: 50; }
 
         #teddyDisplay { font-size: 70px; animation: teddyBounce 2.5s infinite ease-in-out; display: inline-block; }
+
+        /* --- START AGAIN BUTTON (Moved Down) --- */
+        #backBtn {
+            position: absolute;
+            bottom: -80px; /* Moved way below the envelope */
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -165,13 +181,9 @@
 <div class="viewport">
     <div class="envelope-wrapper" id="envelope" onclick="handleEnvelopeClick()">
         <div class="flap"></div>
-        
         <div class="flap-heart">❤️</div>
-        
         <div class="marked-text">Happy Birthday My Miku</div>
-        
         <div class="front-text" style="position:absolute; bottom:15px; width:100%; text-align:center; color:var(--primary); font-size: 12px; z-index:40;">Tap to Open 💌</div>
-        
         <div class="pocket-front" style="position:absolute; bottom:0; width:100%; height:100%; background:var(--envelope-bg); border:2px dashed #b71c1c; border-radius:0 0 10px 10px; z-index:20; pointer-events:none;"></div>
         
         <div class="letter" id="letter" onclick="handleLetterClick(event)">
@@ -188,7 +200,7 @@
             <span style="text-align: center; color: var(--primary); font-weight: bold; padding-top: 15px; border-top: 1px dashed #ccc; width: 100%; display: block; font-size: 13px;">(Tap the letter for a gift 🎁)</span>
         </div>
     </div>
-    <button id="backBtn" onclick="resetEverything(event)" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 20px; display: none; z-index: 1000; cursor: pointer;">Start Again</button>
+    <button id="backBtn" onclick="resetEverything(event)">Start Again</button>
 </div>
 
 <div id="gift-overlay" onclick="handleGiftAreaClick()">
