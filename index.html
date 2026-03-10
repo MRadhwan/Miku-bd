@@ -25,11 +25,10 @@
             align-items: center;
             background: linear-gradient(135deg, #fce4ec 0%, #ffc1e3 100%);
             font-family: 'Georgia', serif;
-            overflow: hidden; /* Stops accidental scrolling */
+            overflow: hidden;
             user-select: none;
         }
 
-        /* Container that keeps everything centered and visible */
         .main-container {
             position: relative;
             width: 100%;
@@ -40,7 +39,7 @@
             align-items: center;
         }
 
-        /* --- ENVELOPE --- */
+        /* --- ENVELOPE BASE --- */
         .envelope-wrapper {
             position: relative;
             width: 320px;
@@ -50,7 +49,7 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             z-index: 100;
             cursor: pointer;
-            margin-top: 50px; /* Space for the letter to rise into */
+            margin-top: 100px; /* Space for letter to rise */
         }
 
         .flap {
@@ -58,38 +57,44 @@
             top: 0; left: 0; width: 0; height: 0;
             border-left: 160px solid transparent; border-right: 160px solid transparent;
             border-top: 130px solid var(--flap-color);
-            transform-origin: top; transition: transform 0.6s ease; z-index: 300;
+            transform-origin: top; transition: transform 0.6s ease; z-index: 400;
         }
 
         .flap-heart {
             position: absolute;
             top: 110px; width: 100%; text-align: center;
-            color: #b71c1c; font-size: 28px; z-index: 350; pointer-events: none;
+            color: #b71c1c; font-size: 28px; z-index: 450; pointer-events: none;
         }
 
         .marked-text {
             position: absolute; top: 145px; width: 100%; text-align: center;
             color: var(--primary); font-weight: bold; font-size: 18px;
-            z-index: 320; pointer-events: none;
+            z-index: 410; pointer-events: none;
             animation: pulseText 2s infinite ease-in-out;
         }
 
-        .tap-text {
-            position: absolute; bottom: 15px; width: 100%; text-align: center;
-            color: var(--primary); font-size: 12px; z-index: 320;
+        /* --- THE POCKET (Hides bottom of letter) --- */
+        .pocket-front {
+            position: absolute;
+            bottom: 0; width: 100%; height: 100%;
+            background: var(--envelope-bg);
+            border: 2px dashed #b71c1c;
+            border-radius: 0 0 10px 10px;
+            z-index: 300; /* Above letter, below flap when closed */
+            pointer-events: none;
         }
 
-        /* --- THE FIXED LETTER --- */
+        /* --- THE SCROLLING LETTER --- */
         .letter {
             position: absolute;
-            top: 5px; /* Starts inside */
+            top: 10px; 
             left: 10px;
             width: 300px;
-            height: 200px; /* Small height while inside */
+            height: 200px;
             background: var(--paper);
             padding: 25px 20px;
             box-sizing: border-box;
-            z-index: 50;
+            z-index: 200; /* Inside the pocket */
             overflow-y: auto;
             border-radius: 5px;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
@@ -97,34 +102,28 @@
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .letter h2 {
-            color: var(--primary);
-            text-align: center;
-            font-size: 1.2rem;
-            margin: 0 0 15px 0;
-        }
-
+        .letter h2 { color: var(--primary); text-align: center; font-size: 1.2rem; margin: 0 0 15px 0; }
         .letter p { line-height: 1.6; color: #333; font-size: 14px; white-space: pre-wrap; margin-bottom: 15px;}
 
         /* --- ANIMATION STATES --- */
-        .open .flap { transform: rotateX(180deg); z-index: 10; }
-        .open .marked-text, .open .flap-heart, .open .tap-text { opacity: 0; pointer-events: none; }
+        .open .flap { transform: rotateX(180deg); z-index: 50; }
+        .open .marked-text, .open .flap-heart { opacity: 0; }
         
         .open .letter {
             opacity: 1;
-            top: -280px; /* Moves it UP properly */
-            height: 400px; /* Grows tall enough to read */
-            z-index: 500;
+            top: -260px; /* Rises out of pocket */
+            height: 400px; 
+            z-index: 200; /* Stays behind pocket-front while scrolling */
         }
 
-        /* --- BUTTON (Always below envelope) --- */
+        /* --- START AGAIN BUTTON (Higher/Near Envelope) --- */
         #backBtn {
-            margin-top: 30px;
+            margin-top: 15px; /* Tucked close to envelope */
             background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
+            padding: 10px 25px;
+            border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
             z-index: 1000;
@@ -149,12 +148,6 @@
         .photo-box { width: 130px; height: 130px; border-radius: 8px; overflow: hidden; border: 2px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Mobile specific adjustments */
-        @media (max-height: 600px) {
-            .open .letter { top: -240px; height: 320px; }
-            .envelope-wrapper { margin-top: 100px; }
-        }
-
         @keyframes pulseText { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes sparkleFloat { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
     </style>
@@ -166,9 +159,10 @@
         <div class="flap"></div>
         <div class="flap-heart">❤️</div>
         <div class="marked-text">Happy Birthday My Miku</div>
-        <div class="tap-text">Tap to Open 💌</div>
         
-        <div class="pocket-front" style="position:absolute; bottom:0; width:100%; height:100%; background:var(--envelope-bg); border:2px dashed #b71c1c; border-radius:0 0 10px 10px; z-index:200; pointer-events:none;"></div>
+        <div class="pocket-front">
+             <div style="position:absolute; bottom:15px; width:100%; text-align:center; color:var(--primary); font-size: 12px;">Tap to Open 💌</div>
+        </div>
         
         <div class="letter" id="letter" onclick="handleLetterClick(event)">
             <h2>Dearest Miku Madam,</h2>
@@ -276,4 +270,3 @@
 </script>
 </body>
 </html>
-
