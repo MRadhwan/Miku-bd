@@ -27,26 +27,31 @@
             user-select: none;
         }
 
-        /* Sparkle & Animation Effects */
-        @keyframes sparkleFloat {
-            0% { transform: translateY(0) scale(1); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        /* --- ANIMATIONS --- */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
         }
 
-        .sparkle {
-            position: absolute;
-            font-size: 20px;
-            pointer-events: none;
-            animation: sparkleFloat 2s linear forwards;
-            z-index: 3000;
+        @keyframes sparkleFloat {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-120px) rotate(20deg); opacity: 0; }
         }
 
         @keyframes teddyBounce {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(5deg); }
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
         }
 
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 5px rgba(216, 27, 96, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(216, 27, 96, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(216, 27, 96, 0.2); }
+        }
+
+        /* --- LAYOUT --- */
         .viewport {
             position: relative;
             width: 320px;
@@ -57,24 +62,6 @@
             align-items: center;
         }
 
-        #backBtn {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 4000;
-            display: none; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
         .envelope-wrapper {
             position: relative;
             width: 320px;
@@ -83,6 +70,8 @@
             border-radius: 0 0 10px 10px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             z-index: 10;
+            cursor: pointer;
+            animation: pulse 2s infinite ease-in-out; /* Pulsing effect */
         }
 
         .flap {
@@ -103,7 +92,7 @@
         }
 
         .letter h2 { color: var(--primary); text-align: center; font-size: 18px; }
-        .letter p { line-height: 1.6; color: #333; font-size: 15px; white-space: pre-wrap; margin-bottom: 15px; }
+        .letter p { line-height: 1.6; color: #333; font-size: 14px; white-space: pre-wrap; }
 
         #gift-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -112,20 +101,29 @@
         }
 
         .photo-card {
-            width: 90vw; max-width: 420px; background: var(--gift-bg);
-            padding: 25px 20px; border-radius: 15px; text-align: center;
-            border: 3px double var(--gold); transform: scale(0.8);
+            width: 85vw; max-width: 380px; background: var(--gift-bg);
+            padding: 20px; border-radius: 15px; text-align: center;
+            border: 3px double var(--gold); transform: scale(0.7);
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .photo-flex { display: flex; gap: 12px; margin: 15px 0; justify-content: center; }
-        .photo-box { width: 46%; background: #f0f0f0; border-radius: 8px; overflow: hidden; box-shadow: 0 0 15px rgba(216, 27, 96, 0.3); }
+        .photo-box { 
+            width: 46%; background: #eee; border-radius: 8px; overflow: hidden;
+            animation: glowPulse 2s infinite ease-in-out;
+        }
         .photo-box img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
 
+        .sparkle {
+            position: absolute; font-size: 20px; pointer-events: none;
+            animation: sparkleFloat 2s linear forwards; z-index: 3000;
+        }
+
+        /* --- STATES --- */
         .open .flap { transform: rotateX(180deg); z-index: 5; }
         .open .letter { opacity: 1; transform: translateY(-160px); height: 380px; z-index: 50; }
-        
-        #teddyDisplay { font-size: 70px; animation: teddyBounce 3s infinite ease-in-out; display: inline-block; }
+        .open.envelope-wrapper { animation: none; }
+
+        #teddyDisplay { font-size: 70px; animation: teddyBounce 2.5s infinite ease-in-out; display: inline-block; }
     </style>
 </head>
 <body>
@@ -133,7 +131,7 @@
 <div class="viewport">
     <div class="envelope-wrapper" id="envelope" onclick="handleEnvelopeClick()">
         <div class="flap"></div>
-        <div class="front-text" style="position:absolute; bottom:20px; width:100%; text-align:center; color:var(--primary); font-weight:bold; z-index:40;">Happy Birthday Miku</div>
+        <div class="front-text" style="position:absolute; bottom:20px; width:100%; text-align:center; color:var(--primary); font-weight:bold; z-index:40;">Tap to Open 💌</div>
         <div class="pocket-front" style="position:absolute; bottom:0; width:100%; height:100%; background:var(--envelope-bg); border:2px dashed #b71c1c; border-radius:0 0 10px 10px; z-index:20; pointer-events:none;"></div>
         
         <div class="letter" id="letter" onclick="handleLetterClick(event)">
@@ -147,31 +145,31 @@
             <p>HAPPY BIRTHDAY TO MY DEAREST MIKU MADAM..and oldie</p>
             <p>No gift...this letter is the only thing I can give from my side cause thats all I am capable of but..I am not happy with just a letter everyone gives these on birthdays..I am unique..I wanna give a present I will find a way to give if not..well...this letter is the only best gift I can give..so yea...enjoy the year,stay focused and achieve ur dream u wished to..never give up..if u do..remember urself trying for it..</p>
             <p>So thats it i am concluding my letter by wishing my miku madam a Happy Birthday and A Really good year Ahead 🎂🎉</p>
-            <span style="text-align: center; color: var(--primary); font-weight: bold; padding-top: 20px; border-top: 1px dashed #ccc; width: 100%; display: block;">(Tap paper for present 🎁)</span>
+            <span style="text-align: center; color: var(--primary); font-weight: bold; padding-top: 15px; border-top: 1px dashed #ccc; width: 100%; display: block; font-size: 13px;">(Tap the letter for a gift 🎁)</span>
         </div>
     </div>
-    <button id="backBtn" onclick="resetEverything(event)">Back to Start</button>
+    <button id="backBtn" onclick="resetEverything(event)" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 20px; display: none; z-index: 1000; cursor: pointer;">Start Again</button>
 </div>
 
 <div id="gift-overlay" onclick="handleGiftAreaClick()">
     <div id="sparkle-layer" style="position: absolute; width:100%; height:100%; pointer-events:none;"></div>
     <div class="photo-card" id="mainPhotoCard">
-        <h2 id="photoCardTitle" style="color: var(--text-brown);">✨ Happy Birthday ✨</h2>
+        <h2 id="photoCardTitle" style="color: var(--text-brown); font-size: 22px;">✨ For Miku ✨</h2>
         <div id="teddyArea">
             <div id="teddyDisplay">🧸</div>
-            <p style="color: var(--primary); font-weight: bold;">(Tap for memories... 📸)</p>
+            <p style="color: var(--primary); font-weight: bold;">(Tap the bear! 📸)</p>
         </div>
         <div id="photoArea" style="display:none; opacity:0;">
-            <div class="photo-flex">
+            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 10px;">
                 <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Young.jpg"></div>
                 <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg"></div>
             </div>
-            <p style="font-weight: bold; color: var(--text-brown); letter-spacing: 2px;">LONG JOURNEY</p>
-            <p style="color: var(--primary); font-size: 12px;">(Tap again... ✨)</p>
+            <p style="font-weight: bold; color: var(--text-brown); letter-spacing: 2px; margin: 5px 0;">LONG JOURNEY</p>
+            <p style="color: var(--primary); font-size: 11px;">(Tap again for one more thing... ✨)</p>
         </div>
         <div id="byeArea" style="display:none; opacity:0;">
-            <h3 style="color: var(--primary);">Hope u like it!</h3>
-            <p>Bye for now... 🌸</p>
+            <h3 style="color: var(--primary); margin: 5px 0;">Hope u like it!</h3>
+            <p style="font-size: 14px;">Happy Birthday, Oldie! 🌸</p>
         </div>
     </div>
 </div>
@@ -185,9 +183,9 @@
         const layer = document.getElementById('sparkle-layer');
         const s = document.createElement('div');
         s.className = 'sparkle';
-        s.innerHTML = ['✨', '🌸', '💖', '⭐'][Math.floor(Math.random() * 4)];
-        s.style.left = (Math.random() * 80 + 10) + '%';
-        s.style.top = (Math.random() * 60 + 20) + '%';
+        s.innerHTML = ['✨', '🌸', '💖', '⭐', '🎈'][Math.floor(Math.random() * 5)];
+        s.style.left = (Math.random() * 90) + '%';
+        s.style.top = (Math.random() * 70 + 20) + '%';
         layer.appendChild(s);
         setTimeout(() => s.remove(), 2000);
     }
@@ -204,7 +202,7 @@
         if (currentStep === 2) {
             e.stopPropagation(); 
             document.getElementById('gift-overlay').style.display = 'flex';
-            sparkleInterval = setInterval(createSparkle, 400);
+            sparkleInterval = setInterval(createSparkle, 300);
             setTimeout(() => {
                 document.getElementById('gift-overlay').style.opacity = '1';
                 document.getElementById('mainPhotoCard').style.transform = 'scale(1)';
@@ -224,14 +222,12 @@
             setTimeout(() => { document.getElementById('byeArea').style.opacity = '1'; }, 10);
             giftSubStep = 3;
         } else {
-            document.getElementById('gift-overlay').style.opacity = '0';
-            clearInterval(sparkleInterval);
-            setTimeout(() => { document.getElementById('gift-overlay').style.display = 'none'; }, 500);
+            resetEverything(null);
         }
     }
 
     function resetEverything(e) {
-        e.stopPropagation();
+        if (e) e.stopPropagation();
         currentStep = 1; giftSubStep = 1;
         clearInterval(sparkleInterval);
         document.getElementById('envelope').classList.remove('open');
@@ -246,4 +242,3 @@
 </script>
 </body>
 </html>
-
