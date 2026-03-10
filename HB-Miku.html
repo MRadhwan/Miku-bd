@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Surprise for Miku</title>
+    <style>
+        :root {
+            --primary: #d81b60;
+            --envelope-bg: #ffcdd2;
+            --flap-color: #ff80ab;
+            --paper: #ffffff;
+            --gift-bg: #fffbf0;
+            --gold: #c5a028;
+            --text-brown: #5d4037;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fce4ec 0%, #ffc1e3 100%);
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .viewport {
+            position: relative;
+            width: 320px;
+            height: 520px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        #backBtn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 3000;
+            display: none; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            background: var(--envelope-bg);
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .front-text {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: flex-end;
+            padding-bottom: 20px; box-sizing: border-box;
+            z-index: 40; color: var(--primary); font-weight: bold; font-size: 22px;
+            text-shadow: 1px 1px white; transition: opacity 0.3s; pointer-events: none;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 0;
+            border-left: 160px solid transparent; border-right: 160px solid transparent;
+            border-top: 130px solid var(--flap-color);
+            transform-origin: top; transition: transform 0.6s ease; z-index: 30; pointer-events: none;
+        }
+
+        .pocket-front {
+            position: absolute;
+            bottom: 0; width: 100%; height: 100%;
+            background: var(--envelope-bg); border: 2px dashed #b71c1c;
+            border-radius: 0 0 10px 10px; z-index: 20; pointer-events: none;
+        }
+
+        .letter {
+            position: absolute;
+            bottom: 10px; left: 10px; width: 300px; height: 200px;
+            background: var(--paper); padding: 15px; box-sizing: border-box;
+            z-index: 15; overflow-y: auto; border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.8s ease, opacity 0.3s;
+            opacity: 0; -webkit-overflow-scrolling: touch;
+        }
+
+        .letter h2 { color: var(--primary); text-align: center; font-size: 18px; margin-top: 0; }
+        .letter p { line-height: 1.6; color: #333; font-size: 15px; white-space: pre-wrap; margin-bottom: 15px; }
+
+        #gift-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000;
+            justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s ease;
+        }
+
+        .photo-card {
+            width: 90vw; max-width: 420px; background: var(--gift-bg);
+            padding: 25px 20px; border-radius: 15px; text-align: center;
+            border: 3px double var(--gold); transform: scale(0.8);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+        }
+
+        .photo-flex { display: flex; gap: 12px; margin: 15px 0; justify-content: center; }
+        .photo-box { width: 46%; background: #f0f0f0; border-radius: 8px; min-height: 140px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .photo-box img { width: 100%; border-radius: 8px; border: 2px solid white; aspect-ratio: 1/1; object-fit: cover; display: block; }
+
+        .open .flap { transform: rotateX(180deg); z-index: 5; }
+        .open .front-text { opacity: 0; }
+        .open .letter { opacity: 1; transform: translateY(-160px); height: 380px; z-index: 50; }
+    </style>
+</head>
+<body>
+
+<div class="viewport">
+    <div class="envelope-wrapper" id="envelope" onclick="handleEnvelopeClick()">
+        <div class="flap"></div>
+        <div class="front-text">Happy Birthday Miku</div>
+        <div class="pocket-front"></div>
+        
+        <div class="letter" id="letter" onclick="handleLetterClick(event)">
+            <h2>Dearest Miku Madam,</h2>
+            <p>Today is ur day my miku madam..Mar 24th 2009 The day u were cherished into earth to be the laughter and the future of ur family...</p>
+            <p>And this year I wish u have wonderfully experiences which u couldn't experience last year..so I hope u get the chance to experience them this year..I also wish best of luck on ur 12th..but today is nothing but focus on ur birthday..</p>
+            <p>ur the sweetest,kindest and pretty lady...now ur aging to a grandma but that dosent matter grandma's are also a charm so ur a bright star..hope all ur hardwork turns to reality in these coming days..</p>
+            <p>if anything bothers u just keep getting through it like evry year..this is ur day and the upcoming year is the test..so stay strong and enjoy the few years of childhoodness before it vanishes into the reality and responsibilities take over..so cherish evrey moment of this year and keep cherishing until ur an old granny..</p>
+            <p>17 now..17 years of experiencing the moments of life with everyone..keep it up..life is only lived once so live to the fullest cause once you grow even older u might or can experience those experiences again so dont miss any opportunity trust urself and take the decisions and prove u were right keep being awesome evry year and get more pretty than pretty in these coming years..</p>
+            <p>so nothing else I wish u a very happy birthday..enjoy the day and forget about every other stress just relax and enjoy ur day cause who knows who all will be there the next year so enjoy with everyone make everyone happy as they looked after u and made u happy..</p>
+            <p>HAPPY BIRTHDAY TO MY DEAREST MIKU MADAM..and oldie</p>
+            <p>No gift...this letter is the only thing I can give from my side cause thats all I am capable of but..I am not happy with just a letter everyone gives these on birthdays..I am unique..I wanna give a present I will find a way to give if not..well...this letter is the only best gift I can give..so yea...enjoy the year,stay focused and achieve ur dream u wished to..never give up..if u do..remember urself trying for it..</p>
+            <p>So thats it i am concluding my letter by wishing my miku madam a Happy Birthday and A Really good year Ahead 🎂🎉</p>
+            <span style="text-align: center; color: var(--primary); font-weight: bold; padding-top: 20px; border-top: 1px dashed #ccc; width: 100%; display: block;">(Tap paper for present 🎁)</span>
+        </div>
+        <div id="instructions" style="position: absolute; bottom: -50px; width: 100%; text-align: center; color: white; font-size: 11px;">TAP TO UNVEIL</div>
+    </div>
+    <button id="backBtn" onclick="resetEverything(event)">Back to Start</button>
+</div>
+
+<div id="gift-overlay" onclick="handleGiftAreaClick()">
+    <div class="photo-card" id="mainPhotoCard">
+        <h2 id="photoCardTitle" style="color: var(--text-brown);">✨ Happy Birthday ✨</h2>
+        
+        <div id="teddyArea">
+            <div style="font-size: 70px;">🧸</div>
+            <p style="color: var(--primary); font-weight: bold;">(Tap for memories... 📸)</p>
+        </div>
+
+        <div id="photoArea" style="display:none; opacity:0;">
+            <div class="photo-flex">
+                <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Young.jpg" alt="Young Miku"></div>
+                <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg" alt="Miku Now"></div>
+            </div>
+            <p style="font-weight: bold; color: var(--text-brown); letter-spacing: 2px;">LONG JOURNEY</p>
+            <p style="color: var(--primary); font-size: 12px;">(Tap again... ✨)</p>
+        </div>
+
+        <div id="byeArea" style="display:none; opacity:0;">
+            <h3 style="color: var(--primary);">Hope u like it!</h3>
+            <p>Bye for now... 🌸</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    let giftSubStep = 1;
+
+    function handleEnvelopeClick() {
+        if (currentStep === 1) {
+            document.getElementById('envelope').classList.add('open');
+            document.getElementById('backBtn').style.display = 'block';
+            document.getElementById('instructions').innerText = "SCROLL DOWN";
+            currentStep = 2;
+        }
+    }
+
+    function handleLetterClick(e) {
+        if (currentStep === 2) {
+            e.stopPropagation(); 
+            const overlay = document.getElementById('gift-overlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                document.getElementById('mainPhotoCard').style.transform = 'scale(1)';
+            }, 10);
+        }
+    }
+
+    function handleGiftAreaClick() {
+        if (giftSubStep === 1) {
+            document.getElementById('teddyArea').style.display = 'none';
+            document.getElementById('photoArea').style.display = 'block';
+            setTimeout(() => { document.getElementById('photoArea').style.opacity = '1'; }, 10);
+            document.getElementById('photoCardTitle').innerText = "Miku's 17";
+            giftSubStep = 2;
+        } else if (giftSubStep === 2) {
+            document.getElementById('photoArea').style.display = 'none';
+            document.getElementById('byeArea').style.display = 'block';
+            setTimeout(() => { document.getElementById('byeArea').style.opacity = '1'; }, 10);
+            giftSubStep = 3;
+        } else {
+            closeGift();
+        }
+    }
+
+    function closeGift() {
+        const overlay = document.getElementById('gift-overlay');
+        overlay.style.opacity = '0';
+        setTimeout(() => { overlay.style.display = 'none'; }, 500);
+    }
+
+    function resetEverything(e) {
+        e.stopPropagation();
+        currentStep = 1;
+        giftSubStep = 1;
+        document.getElementById('envelope').classList.remove('open');
+        document.getElementById('instructions').innerText = "TAP TO UNVEIL";
+        document.getElementById('backBtn').style.display = 'none';
+        closeGift();
+        document.getElementById('photoCardTitle').innerText = "✨ Happy Birthday ✨";
+        document.getElementById('teddyArea').style.display = 'block';
+        document.getElementById('photoArea').style.display = 'none';
+        document.getElementById('photoArea').style.opacity = '0';
+        document.getElementById('byeArea').style.display = 'none';
+        document.getElementById('byeArea').style.opacity = '0';
+        // Scroll letter back to top
+        document.getElementById('letter').scrollTop = 0;
+    }
+</script>
+
+</body>
+</html>
+
