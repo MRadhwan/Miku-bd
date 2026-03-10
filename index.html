@@ -27,6 +27,26 @@
             user-select: none;
         }
 
+        /* Sparkle & Animation Effects */
+        @keyframes sparkleFloat {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        }
+
+        .sparkle {
+            position: absolute;
+            font-size: 20px;
+            pointer-events: none;
+            animation: sparkleFloat 2s linear forwards;
+            z-index: 3000;
+        }
+
+        @keyframes teddyBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
         .viewport {
             position: relative;
             width: 320px;
@@ -50,7 +70,7 @@
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            z-index: 3000;
+            z-index: 4000;
             display: none; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
@@ -65,28 +85,12 @@
             z-index: 10;
         }
 
-        .front-text {
-            position: absolute;
-            width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: flex-end;
-            padding-bottom: 20px; box-sizing: border-box;
-            z-index: 40; color: var(--primary); font-weight: bold; font-size: 22px;
-            text-shadow: 1px 1px white; transition: opacity 0.3s; pointer-events: none;
-        }
-
         .flap {
             position: absolute;
             top: 0; left: 0; width: 0; height: 0;
             border-left: 160px solid transparent; border-right: 160px solid transparent;
             border-top: 130px solid var(--flap-color);
-            transform-origin: top; transition: transform 0.6s ease; z-index: 30; pointer-events: none;
-        }
-
-        .pocket-front {
-            position: absolute;
-            bottom: 0; width: 100%; height: 100%;
-            background: var(--envelope-bg); border: 2px dashed #b71c1c;
-            border-radius: 0 0 10px 10px; z-index: 20; pointer-events: none;
+            transform-origin: top; transition: transform 0.6s ease; z-index: 30;
         }
 
         .letter {
@@ -94,12 +98,11 @@
             bottom: 10px; left: 10px; width: 300px; height: 200px;
             background: var(--paper); padding: 15px; box-sizing: border-box;
             z-index: 15; overflow-y: auto; border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.8s ease, opacity 0.3s;
-            opacity: 0; -webkit-overflow-scrolling: touch;
+            opacity: 0;
         }
 
-        .letter h2 { color: var(--primary); text-align: center; font-size: 18px; margin-top: 0; }
+        .letter h2 { color: var(--primary); text-align: center; font-size: 18px; }
         .letter p { line-height: 1.6; color: #333; font-size: 15px; white-space: pre-wrap; margin-bottom: 15px; }
 
         #gift-overlay {
@@ -112,16 +115,17 @@
             width: 90vw; max-width: 420px; background: var(--gift-bg);
             padding: 25px 20px; border-radius: 15px; text-align: center;
             border: 3px double var(--gold); transform: scale(0.8);
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .photo-flex { display: flex; gap: 12px; margin: 15px 0; justify-content: center; }
-        .photo-box { width: 46%; background: #f0f0f0; border-radius: 8px; min-height: 140px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .photo-box img { width: 100%; border-radius: 8px; border: 2px solid white; aspect-ratio: 1/1; object-fit: cover; display: block; }
+        .photo-box { width: 46%; background: #f0f0f0; border-radius: 8px; overflow: hidden; box-shadow: 0 0 15px rgba(216, 27, 96, 0.3); }
+        .photo-box img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
 
         .open .flap { transform: rotateX(180deg); z-index: 5; }
-        .open .front-text { opacity: 0; }
         .open .letter { opacity: 1; transform: translateY(-160px); height: 380px; z-index: 50; }
+        
+        #teddyDisplay { font-size: 70px; animation: teddyBounce 3s infinite ease-in-out; display: inline-block; }
     </style>
 </head>
 <body>
@@ -129,8 +133,8 @@
 <div class="viewport">
     <div class="envelope-wrapper" id="envelope" onclick="handleEnvelopeClick()">
         <div class="flap"></div>
-        <div class="front-text">Happy Birthday Miku</div>
-        <div class="pocket-front"></div>
+        <div class="front-text" style="position:absolute; bottom:20px; width:100%; text-align:center; color:var(--primary); font-weight:bold; z-index:40;">Happy Birthday Miku</div>
+        <div class="pocket-front" style="position:absolute; bottom:0; width:100%; height:100%; background:var(--envelope-bg); border:2px dashed #b71c1c; border-radius:0 0 10px 10px; z-index:20; pointer-events:none;"></div>
         
         <div class="letter" id="letter" onclick="handleLetterClick(event)">
             <h2>Dearest Miku Madam,</h2>
@@ -145,29 +149,26 @@
             <p>So thats it i am concluding my letter by wishing my miku madam a Happy Birthday and A Really good year Ahead 🎂🎉</p>
             <span style="text-align: center; color: var(--primary); font-weight: bold; padding-top: 20px; border-top: 1px dashed #ccc; width: 100%; display: block;">(Tap paper for present 🎁)</span>
         </div>
-        <div id="instructions" style="position: absolute; bottom: -50px; width: 100%; text-align: center; color: white; font-size: 11px;">TAP TO UNVEIL</div>
     </div>
     <button id="backBtn" onclick="resetEverything(event)">Back to Start</button>
 </div>
 
 <div id="gift-overlay" onclick="handleGiftAreaClick()">
+    <div id="sparkle-layer" style="position: absolute; width:100%; height:100%; pointer-events:none;"></div>
     <div class="photo-card" id="mainPhotoCard">
         <h2 id="photoCardTitle" style="color: var(--text-brown);">✨ Happy Birthday ✨</h2>
-        
         <div id="teddyArea">
-            <div style="font-size: 70px;">🧸</div>
+            <div id="teddyDisplay">🧸</div>
             <p style="color: var(--primary); font-weight: bold;">(Tap for memories... 📸)</p>
         </div>
-
         <div id="photoArea" style="display:none; opacity:0;">
             <div class="photo-flex">
-                <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Young.jpg" alt="Young Miku"></div>
-                <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg" alt="Miku Now"></div>
+                <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Young.jpg"></div>
+                <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg"></div>
             </div>
             <p style="font-weight: bold; color: var(--text-brown); letter-spacing: 2px;">LONG JOURNEY</p>
             <p style="color: var(--primary); font-size: 12px;">(Tap again... ✨)</p>
         </div>
-
         <div id="byeArea" style="display:none; opacity:0;">
             <h3 style="color: var(--primary);">Hope u like it!</h3>
             <p>Bye for now... 🌸</p>
@@ -178,12 +179,23 @@
 <script>
     let currentStep = 1;
     let giftSubStep = 1;
+    let sparkleInterval;
+
+    function createSparkle() {
+        const layer = document.getElementById('sparkle-layer');
+        const s = document.createElement('div');
+        s.className = 'sparkle';
+        s.innerHTML = ['✨', '🌸', '💖', '⭐'][Math.floor(Math.random() * 4)];
+        s.style.left = (Math.random() * 80 + 10) + '%';
+        s.style.top = (Math.random() * 60 + 20) + '%';
+        layer.appendChild(s);
+        setTimeout(() => s.remove(), 2000);
+    }
 
     function handleEnvelopeClick() {
         if (currentStep === 1) {
             document.getElementById('envelope').classList.add('open');
             document.getElementById('backBtn').style.display = 'block';
-            document.getElementById('instructions').innerText = "SCROLL DOWN";
             currentStep = 2;
         }
     }
@@ -191,10 +203,10 @@
     function handleLetterClick(e) {
         if (currentStep === 2) {
             e.stopPropagation(); 
-            const overlay = document.getElementById('gift-overlay');
-            overlay.style.display = 'flex';
+            document.getElementById('gift-overlay').style.display = 'flex';
+            sparkleInterval = setInterval(createSparkle, 400);
             setTimeout(() => {
-                overlay.style.opacity = '1';
+                document.getElementById('gift-overlay').style.opacity = '1';
                 document.getElementById('mainPhotoCard').style.transform = 'scale(1)';
             }, 10);
         }
@@ -205,7 +217,6 @@
             document.getElementById('teddyArea').style.display = 'none';
             document.getElementById('photoArea').style.display = 'block';
             setTimeout(() => { document.getElementById('photoArea').style.opacity = '1'; }, 10);
-            document.getElementById('photoCardTitle').innerText = "Miku's 17";
             giftSubStep = 2;
         } else if (giftSubStep === 2) {
             document.getElementById('photoArea').style.display = 'none';
@@ -213,35 +224,26 @@
             setTimeout(() => { document.getElementById('byeArea').style.opacity = '1'; }, 10);
             giftSubStep = 3;
         } else {
-            closeGift();
+            document.getElementById('gift-overlay').style.opacity = '0';
+            clearInterval(sparkleInterval);
+            setTimeout(() => { document.getElementById('gift-overlay').style.display = 'none'; }, 500);
         }
-    }
-
-    function closeGift() {
-        const overlay = document.getElementById('gift-overlay');
-        overlay.style.opacity = '0';
-        setTimeout(() => { overlay.style.display = 'none'; }, 500);
     }
 
     function resetEverything(e) {
         e.stopPropagation();
-        currentStep = 1;
-        giftSubStep = 1;
+        currentStep = 1; giftSubStep = 1;
+        clearInterval(sparkleInterval);
         document.getElementById('envelope').classList.remove('open');
-        document.getElementById('instructions').innerText = "TAP TO UNVEIL";
         document.getElementById('backBtn').style.display = 'none';
-        closeGift();
-        document.getElementById('photoCardTitle').innerText = "✨ Happy Birthday ✨";
+        document.getElementById('gift-overlay').style.display = 'none';
+        document.getElementById('gift-overlay').style.opacity = '0';
         document.getElementById('teddyArea').style.display = 'block';
         document.getElementById('photoArea').style.display = 'none';
-        document.getElementById('photoArea').style.opacity = '0';
         document.getElementById('byeArea').style.display = 'none';
-        document.getElementById('byeArea').style.opacity = '0';
-        // Scroll letter back to top
         document.getElementById('letter').scrollTop = 0;
     }
 </script>
-
 </body>
 </html>
 
