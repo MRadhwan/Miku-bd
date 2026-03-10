@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Birthday Surprise for Miku</title>
     <style>
         :root {
@@ -17,28 +17,30 @@
 
         body {
             margin: 0;
-            min-height: 100vh;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
             display: flex;
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #fce4ec 0%, #ffc1e3 100%);
             font-family: 'Georgia', serif;
-            overflow-x: hidden;
+            overflow: hidden; /* Stops accidental scrolling */
             user-select: none;
         }
 
-        /* --- LAYOUT --- */
-        .viewport {
+        /* Container that keeps everything centered and visible */
+        .main-container {
             position: relative;
             width: 100%;
-            max-width: 400px;
-            height: 80vh; /* Scaled for laptop/mobile height */
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
+        /* --- ENVELOPE --- */
         .envelope-wrapper {
             position: relative;
             width: 320px;
@@ -46,9 +48,9 @@
             background: var(--envelope-bg);
             border-radius: 0 0 10px 10px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            z-index: 10;
+            z-index: 100;
             cursor: pointer;
-            transition: transform 0.3s;
+            margin-top: 50px; /* Space for the letter to rise into */
         }
 
         .flap {
@@ -56,82 +58,68 @@
             top: 0; left: 0; width: 0; height: 0;
             border-left: 160px solid transparent; border-right: 160px solid transparent;
             border-top: 130px solid var(--flap-color);
-            transform-origin: top; transition: transform 0.6s ease; z-index: 30;
+            transform-origin: top; transition: transform 0.6s ease; z-index: 300;
         }
 
         .flap-heart {
             position: absolute;
-            top: 110px;
-            width: 100%;
-            text-align: center;
-            color: #b71c1c;
-            font-size: 28px;
-            z-index: 45;
-            pointer-events: none;
+            top: 110px; width: 100%; text-align: center;
+            color: #b71c1c; font-size: 28px; z-index: 350; pointer-events: none;
         }
 
         .marked-text {
-            position: absolute;
-            top: 145px;
-            width: 100%;
-            text-align: center;
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 18px;
-            z-index: 40;
-            pointer-events: none;
+            position: absolute; top: 145px; width: 100%; text-align: center;
+            color: var(--primary); font-weight: bold; font-size: 18px;
+            z-index: 320; pointer-events: none;
             animation: pulseText 2s infinite ease-in-out;
         }
 
-        /* --- RESPONSIVE LETTER FIX --- */
+        .tap-text {
+            position: absolute; bottom: 15px; width: 100%; text-align: center;
+            color: var(--primary); font-size: 12px; z-index: 320;
+        }
+
+        /* --- THE FIXED LETTER --- */
         .letter {
             position: absolute;
-            bottom: 5%; 
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%; 
-            height: 180px;
-            background: var(--paper); 
+            top: 5px; /* Starts inside */
+            left: 10px;
+            width: 300px;
+            height: 200px; /* Small height while inside */
+            background: var(--paper);
             padding: 25px 20px;
             box-sizing: border-box;
-            z-index: 15; 
-            overflow-y: auto; 
+            z-index: 50;
+            overflow-y: auto;
             border-radius: 5px;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.8s ease, opacity 0.3s;
-            opacity: 0;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .letter h2 { 
-            color: var(--primary); 
-            text-align: center; 
-            font-size: 1.2rem; 
+        .letter h2 {
+            color: var(--primary);
+            text-align: center;
+            font-size: 1.2rem;
             margin: 0 0 15px 0;
-            line-height: 1.2;
-        }
-        
-        .letter p { line-height: 1.6; color: #333; font-size: 0.95rem; white-space: pre-wrap; }
-
-        /* --- ANIMATIONS --- */
-        @keyframes pulseText { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
-        @keyframes sparkleFloat { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-120px) rotate(20deg); opacity: 0; } }
-        @keyframes teddyBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        /* --- STATES --- */
-        .open .flap { transform: rotateX(180deg); z-index: 5; }
-        .open .marked-text, .open .flap-heart { display: none; }
-        
-        /* This pushes the letter up exactly enough to see the heading */
-        .open .letter { 
-            opacity: 1; 
-            transform: translate(-50%, -240px); /* Centers and lifts */
-            height: 420px; /* Taller for better reading */
-            max-height: 60vh; /* Won't go off screen on small phones */
-            z-index: 50; 
         }
 
+        .letter p { line-height: 1.6; color: #333; font-size: 14px; white-space: pre-wrap; margin-bottom: 15px;}
+
+        /* --- ANIMATION STATES --- */
+        .open .flap { transform: rotateX(180deg); z-index: 10; }
+        .open .marked-text, .open .flap-heart, .open .tap-text { opacity: 0; pointer-events: none; }
+        
+        .open .letter {
+            opacity: 1;
+            top: -280px; /* Moves it UP properly */
+            height: 400px; /* Grows tall enough to read */
+            z-index: 500;
+        }
+
+        /* --- BUTTON (Always below envelope) --- */
         #backBtn {
-            margin-top: 50px;
+            margin-top: 30px;
             background: var(--primary);
             color: white;
             border: none;
@@ -141,7 +129,7 @@
             cursor: pointer;
             z-index: 1000;
             display: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         /* --- GIFT OVERLAY --- */
@@ -154,26 +142,33 @@
         .photo-card {
             width: 90%; max-width: 380px; background: var(--gift-bg);
             padding: 20px; border-radius: 15px; text-align: center;
-            border: 3px double var(--gold); transform: scale(0.8);
-            transition: transform 0.5s;
+            border: 3px double var(--gold); transform: scale(0.8); transition: 0.5s;
         }
 
         .photo-flex { display: flex; gap: 10px; justify-content: center; margin: 15px 0; }
         .photo-box { width: 130px; height: 130px; border-radius: 8px; overflow: hidden; border: 2px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
-        .sparkle { position: absolute; font-size: 20px; pointer-events: none; animation: sparkleFloat 2s linear forwards; }
-        #teddyDisplay { font-size: 60px; animation: teddyBounce 2s infinite ease-in-out; display: inline-block; cursor: pointer;}
+
+        /* Mobile specific adjustments */
+        @media (max-height: 600px) {
+            .open .letter { top: -240px; height: 320px; }
+            .envelope-wrapper { margin-top: 100px; }
+        }
+
+        @keyframes pulseText { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes sparkleFloat { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
     </style>
 </head>
 <body>
 
-<div class="viewport">
+<div class="main-container">
     <div class="envelope-wrapper" id="envelope" onclick="handleEnvelopeClick()">
         <div class="flap"></div>
         <div class="flap-heart">❤️</div>
         <div class="marked-text">Happy Birthday My Miku</div>
-        <div class="front-text" style="position:absolute; bottom:15px; width:100%; text-align:center; color:var(--primary); font-size: 12px; z-index:40;">Tap to Open 💌</div>
-        <div class="pocket-front" style="position:absolute; bottom:0; width:100%; height:100%; background:var(--envelope-bg); border:2px dashed #b71c1c; border-radius:0 0 10px 10px; z-index:20; pointer-events:none;"></div>
+        <div class="tap-text">Tap to Open 💌</div>
+        
+        <div class="pocket-front" style="position:absolute; bottom:0; width:100%; height:100%; background:var(--envelope-bg); border:2px dashed #b71c1c; border-radius:0 0 10px 10px; z-index:200; pointer-events:none;"></div>
         
         <div class="letter" id="letter" onclick="handleLetterClick(event)">
             <h2>Dearest Miku Madam,</h2>
@@ -197,7 +192,7 @@
     <div class="photo-card" id="mainPhotoCard">
         <h2 style="color: var(--text-brown); font-size: 1.5rem;">✨ For Miku ✨</h2>
         <div id="teddyArea">
-            <div id="teddyDisplay">🧸</div>
+            <div style="font-size: 60px;">🧸</div>
             <p style="color: var(--primary); font-weight: bold;">(Tap the bear! 📸)</p>
         </div>
         <div id="photoArea" style="display:none; opacity:0;">
@@ -281,3 +276,4 @@
 </script>
 </body>
 </html>
+
