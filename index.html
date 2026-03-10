@@ -74,10 +74,22 @@
             transform-origin: top; transition: transform 0.6s ease; z-index: 30;
         }
 
-        /* The text on the envelope */
+        /* The New Heart on the Flap */
+        .flap-heart {
+            position: absolute;
+            top: 110px; /* Positioned near the tip of the triangular flap */
+            width: 100%;
+            text-align: center;
+            color: #b71c1c; /* A deep red for contrast */
+            font-size: 28px;
+            z-index: 45; /* Higher than the flap and text */
+            pointer-events: none;
+        }
+
+        /* The main text below the heart */
         .marked-text {
             position: absolute;
-            top: 135px;
+            top: 145px; /* Moved slightly down to make room */
             width: 100%;
             text-align: center;
             color: var(--primary);
@@ -113,25 +125,24 @@
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* --- UPDATED: Even Photo Styling --- */
         .photo-flex {
             display: flex; gap: 10px; justify-content: center; margin-bottom: 10px;
         }
 
         .photo-box {
-            width: 120px; /* Fixed even width */
-            height: 120px; /* Fixed even height */
+            width: 120px;
+            height: 120px;
             background: #eee;
             border-radius: 8px;
             overflow: hidden;
             border: 2px solid white;
-            box-shadow: 0 0 10px rgba(216, 27, 96, 0.3); /* Soft glowing border */
+            box-shadow: 0 0 10px rgba(216, 27, 96, 0.3);
         }
 
         .photo-box img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Forces images into matching square crop */
+            object-fit: cover;
             display: block;
         }
 
@@ -143,6 +154,7 @@
         /* --- STATES --- */
         .open .flap { transform: rotateX(180deg); z-index: 5; }
         .open .marked-text { display: none; }
+        .open .flap-heart { display: none; } /* Heart vanishes when opened */
         .open .letter { opacity: 1; transform: translateY(-160px); height: 380px; z-index: 50; }
 
         #teddyDisplay { font-size: 70px; animation: teddyBounce 2.5s infinite ease-in-out; display: inline-block; }
@@ -153,6 +165,8 @@
 <div class="viewport">
     <div class="envelope-wrapper" id="envelope" onclick="handleEnvelopeClick()">
         <div class="flap"></div>
+        
+        <div class="flap-heart">❤️</div>
         
         <div class="marked-text">Happy Birthday My Miku</div>
         
@@ -263,6 +277,7 @@
         document.getElementById('teddyArea').style.display = 'block';
         document.getElementById('photoArea').style.display = 'none';
         document.getElementById('byeArea').style.display = 'none';
+        document.getElementById('letter').scrollTop = 0;
     }
 </script>
 </body>
