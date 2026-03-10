@@ -16,38 +16,30 @@
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0; padding: 0;
+            height: 100vh; width: 100vw;
+            display: flex; justify-content: center; align-items: center;
             background: linear-gradient(135deg, #fce4ec 0%, #ffc1e3 100%);
             font-family: 'Georgia', serif;
-            overflow: hidden;
+            overflow: hidden; /* Prevent body scroll */
             user-select: none;
         }
 
         .main-container {
             position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
         }
 
-        /* --- ENVELOPE BASE --- */
+        /* --- ENVELOPE (STAYS ON TOP) --- */
         .envelope-wrapper {
             position: relative;
-            width: 320px;
-            height: 220px;
+            width: 320px; height: 220px;
             background: var(--envelope-bg);
             border-radius: 0 0 10px 10px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            z-index: 100;
+            z-index: 1000; /* Stays above the letter ALWAYS */
             cursor: pointer;
             margin-top: 100px; /* Space for letter to rise */
         }
@@ -57,45 +49,38 @@
             top: 0; left: 0; width: 0; height: 0;
             border-left: 160px solid transparent; border-right: 160px solid transparent;
             border-top: 130px solid var(--flap-color);
-            transform-origin: top; transition: transform 0.6s ease; z-index: 400;
+            transform-origin: top; transition: transform 0.6s ease; z-index: 1500;
         }
 
         .flap-heart {
-            position: absolute;
-            top: 110px; width: 100%; text-align: center;
-            color: #b71c1c; font-size: 28px; z-index: 450; pointer-events: none;
+            position: absolute; top: 110px; width: 100%; text-align: center;
+            color: #b71c1c; font-size: 28px; z-index: 1600; pointer-events: none;
         }
 
         .marked-text {
             position: absolute; top: 145px; width: 100%; text-align: center;
             color: var(--primary); font-weight: bold; font-size: 18px;
-            z-index: 410; pointer-events: none;
+            z-index: 1200; pointer-events: none;
             animation: pulseText 2s infinite ease-in-out;
         }
 
-        /* --- THE POCKET (Hides bottom of letter) --- */
-        .pocket-front {
-            position: absolute;
-            bottom: 0; width: 100%; height: 100%;
-            background: var(--envelope-bg);
-            border: 2px dashed #b71c1c;
-            border-radius: 0 0 10px 10px;
-            z-index: 300; /* Above letter, below flap when closed */
-            pointer-events: none;
+        .tap-text {
+            position: absolute; bottom: 15px; width: 100%; text-align:center;
+            color: var(--primary); font-size: 12px; z-index: 1200;
         }
 
-        /* --- THE SCROLLING LETTER --- */
+        /* --- THE FIXED LETTER (Z-INDEX LOWERED) --- */
         .letter {
             position: absolute;
-            top: 10px; 
+            top: 10px; /* Starts inside */
             left: 10px;
             width: 300px;
             height: 200px;
             background: var(--paper);
-            padding: 25px 20px;
+            padding: 25px 15px; /* Side padding */
             box-sizing: border-box;
-            z-index: 200; /* Inside the pocket */
-            overflow-y: auto;
+            z-index: 500; /* BEHIND envelope-wrapper z-index */
+            overflow-y: scroll; /* Forces standard scroll bar */
             border-radius: 5px;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
             opacity: 0;
@@ -103,22 +88,42 @@
         }
 
         .letter h2 { color: var(--primary); text-align: center; font-size: 1.2rem; margin: 0 0 15px 0; }
-        .letter p { line-height: 1.6; color: #333; font-size: 14px; white-space: pre-wrap; margin-bottom: 15px;}
+        
+        /* The main message container */
+        .letter-content p { 
+            line-height: 1.6; color: #333; font-size: 14px; white-space: pre-wrap; margin-bottom: 15px;
+        }
+
+        /* --- FIX FOR LAST WORDS AND NO-CLICK --- */
+        .letter-content {
+            /* Force extra space at bottom for the end letter to render fully */
+            padding-bottom: 100px; 
+            pointer-events: auto; /* Allow paragraph text reading */
+        }
+
+        /* --- THE REQUIRED END LETTER TRIGGER --- */
+        #letterEndTrigger {
+            text-align: center;
+            display: block;
+            margin: 0 auto;
+            width: fit-content;
+            cursor: pointer;
+            z-index: 800;
+        }
 
         /* --- ANIMATION STATES --- */
-        .open .flap { transform: rotateX(180deg); z-index: 50; }
-        .open .marked-text, .open .flap-heart { opacity: 0; }
+        .open .flap { transform: rotateX(180deg); z-index: 10; }
+        .open .marked-text, .open .flap-heart, .tap-tap-text { opacity: 0; }
         
         .open .letter {
             opacity: 1;
-            top: -260px; /* Rises out of pocket */
+            top: -260px; /* Moves IT UP, properly emerging from envelope */
             height: 400px; 
-            z-index: 200; /* Stays behind pocket-front while scrolling */
         }
 
-        /* --- START AGAIN BUTTON (Higher/Near Envelope) --- */
+        /* --- START AGAIN BUTTON (TUCKED CLOSE) --- */
         #backBtn {
-            margin-top: 15px; /* Tucked close to envelope */
+            margin-top: 15px;
             background: var(--primary);
             color: white;
             border: none;
@@ -126,7 +131,7 @@
             border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
-            z-index: 1000;
+            z-index: 2000;
             display: none;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
@@ -134,7 +139,7 @@
         /* --- GIFT OVERLAY --- */
         #gift-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92); z-index: 2000;
+            background: rgba(0,0,0,0.92); z-index: 3000;
             justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s ease;
         }
 
@@ -149,44 +154,62 @@
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
 
         @keyframes pulseText { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        @keyframes sparkleFloat { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100px); opacity: 0; } }
+        
+        /* The Rain Animation */
+        @keyframes fullRain {
+            0% { transform: translateY(-10vh); opacity: 1; }
+            100% { transform: translateY(110vh); opacity: 0; }
+        }
+
+        .sparkle-rain {
+            position: fixed; top: -50px;
+            font-size: 20px; pointer-events: none;
+            z-index: 2500;
+            animation: fullRain 4s linear forwards;
+        }
+
+        @keyframes teddyBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
 <body>
+
+<div id="rain-layer" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2500;"></div>
 
 <div class="main-container">
     <div class="envelope-wrapper" id="envelope" onclick="handleEnvelopeClick()">
         <div class="flap"></div>
         <div class="flap-heart">❤️</div>
         <div class="marked-text">Happy Birthday My Miku</div>
+        <div class="tap-text" id="initialTapText">Tap to Open 💌</div>
         
-        <div class="pocket-front">
-             <div style="position:absolute; bottom:15px; width:100%; text-align:center; color:var(--primary); font-size: 12px;">Tap to Open 💌</div>
-        </div>
-        
-        <div class="letter" id="letter" onclick="handleLetterClick(event)">
-            <h2>Dearest Miku Madam,</h2>
-            <p>Today is ur day my miku madam..Mar 24th 2009 The day u were cherished into earth to be the laughter and the future of ur family...</p>
-            <p>And this year I wish u have wonderfully experiences which u couldn't experience last year..so I hope u get the chance to experience them this year..I also wish best of luck on ur 12th..but today is nothing but focus on ur birthday..</p>
-            <p>ur the sweetest,kindest and pretty lady...now ur aging to a grandma but that dosent matter grandma's are also a charm so ur a bright star..hope all ur hardwork turns to reality in these coming days..</p>
-            <p>if anything bothers u just keep getting through it like evry year..this is ur day and the upcoming year is the test..so stay strong and enjoy the few years of childhoodness before it vanishes into the reality and responsibilities take over..so cherish evrey moment of this year and keep cherishing until ur an old granny..</p>
-            <p>17 now..17 years of experiencing the moments of life with everyone..keep it up..life is only lived once so live to the fullest cause once you grow even older u might or can experience those experiences again so dont miss any opportunity trust urself and take the decisions and prove u were right keep being awesome evry year and get more pretty than pretty in these coming years..</p>
-            <p>so nothing else I wish u a very happy birthday..enjoy the day and forget about every other stress just relax and enjoy ur day cause who knows who all will be there the next year so enjoy with everyone make everyone happy as they looked after u and made u happy..</p>
-            <p>HAPPY BIRTHDAY TO MY DEAREST MIKU MADAM..and oldie</p>
-            <p>No gift...this letter is the only thing I can give from my side cause thats all I am capable of but..I am not happy with just a letter everyone gives these on birthdays..I am unique..I wanna give a present I will find a way to give if not..well...this letter is the only best gift I can give..so yea...enjoy the year,stay focused and achieve ur dream u wished to..never give up..if u do..remember urself trying for it..</p>
-            <p>So thats it i am concluding my letter by wishing my miku madam a Happy Birthday and A Really good year Ahead 🎂🎉</p>
-            <span style="text-align: center; color: var(--primary); font-weight: bold; padding-top: 15px; border-top: 1px dashed #ccc; width: 100%; display: block; font-size: 13px;">(Tap the letter for a gift 🎁)</span>
+        <div class="letter" id="letter">
+            <div class="letter-content">
+                <h2>Dearest Miku Madam,</h2>
+                <p>Today is ur day my miku madam..Mar 24th 2009 The day u were cherished into earth to be the laughter and the future of ur family...</p>
+                <p>And this year I wish u have wonderfully experiences which u couldn't experience last year..so I hope u get the chance to experience them this year..I also wish best of luck on ur 12th..but today is nothing but focus on ur birthday..</p>
+                <p>ur the sweetest,kindest and pretty lady...now ur aging to a grandma but that dosent matter grandma's are also a charm so ur a bright star..hope all ur hardwork turns to reality in these coming days..</p>
+                <p>if anything bothers u just keep getting through it like evry year..this is ur day and the upcoming year is the test..so stay strong and enjoy the few years of childhoodness before it vanishes into the reality and responsibilities take over..so cherish evrey moment of this year and keep cherishing until ur an old granny..</p>
+                <p>17 now..17 years of experiencing the moments of life with everyone..keep it up..life is only lived once so live to the fullest cause once you grow even older u might or can experience those experiences again so dont miss any opportunity trust urself and take the decisions and prove u were right keep being awesome evry year and get more pretty than pretty in these coming years..</p>
+                <p>so nothing else I wish u a very happy birthday..enjoy the day and forget about every other stress just relax and enjoy ur day cause who knows who all will be there the next year so enjoy with everyone make everyone happy as they looked after u and made u happy..</p>
+                <p>HAPPY BIRTHDAY TO MY DEAREST MIKU MADAM..and oldie</p>
+                <p>No gift...this letter is the only thing I can give from my side cause thats all I am capable of but..I am not happy with just a letter everyone gives these on birthdays..I am unique..I wanna give a present I will find a way to give if not..well...this letter is the only best gift I can give..so yea...enjoy the year,stay focused and achieve ur dream u wished to..never give up..if u do..remember urself trying for it..</p>
+                <p>So thats it i am concluding my letter by wishing my miku madam a Happy Birthday and A Really good year Ahead 🎂🎉</p>
+                
+                <div id="letterEndTrigger" onclick="startGiftSequence(event)">
+                    <span style="display:block; font-size:30px; margin-top:20px;">🎁</span>
+                    <span style="display:block; font-size:12px; font-weight:bold; color:var(--primary); text-decoration:underline;">Click to continue...</span>
+                </div>
+            </div>
         </div>
     </div>
     <button id="backBtn" onclick="resetEverything(event)">Start Again</button>
 </div>
 
 <div id="gift-overlay" onclick="handleGiftAreaClick()">
-    <div id="sparkle-layer" style="position: absolute; width:100%; height:100%; pointer-events:none;"></div>
     <div class="photo-card" id="mainPhotoCard">
         <h2 style="color: var(--text-brown); font-size: 1.5rem;">✨ For Miku ✨</h2>
         <div id="teddyArea">
-            <div style="font-size: 60px;">🧸</div>
+            <div style="font-size: 60px; animation: teddyBounce 2s infinite ease-in-out; display:inline-block;">🧸</div>
             <p style="color: var(--primary); font-weight: bold;">(Tap the bear! 📸)</p>
         </div>
         <div id="photoArea" style="display:none; opacity:0;">
@@ -207,7 +230,7 @@
 <script>
     let currentStep = 1;
     let giftSubStep = 1;
-    let sparkleInterval;
+    let rainInterval;
 
     function handleEnvelopeClick() {
         if (currentStep === 1) {
@@ -217,25 +240,27 @@
         }
     }
 
-    function handleLetterClick(e) {
-        if (currentStep === 2) {
-            e.stopPropagation(); 
-            document.getElementById('gift-overlay').style.display = 'flex';
-            sparkleInterval = setInterval(() => {
-                const layer = document.getElementById('sparkle-layer');
-                const s = document.createElement('div');
-                s.className = 'sparkle';
-                s.innerHTML = ['✨', '🌸', '💖', '⭐', '🎈'][Math.floor(Math.random() * 5)];
-                s.style.left = (Math.random() * 90) + '%';
-                s.style.top = (Math.random() * 70 + 20) + '%';
-                layer.appendChild(s);
-                setTimeout(() => s.remove(), 2000);
-            }, 300);
-            setTimeout(() => {
-                document.getElementById('gift-overlay').style.opacity = '1';
-                document.getElementById('mainPhotoCard').style.transform = 'scale(1)';
-            }, 10);
-        }
+    // This is the only function that opens the gift section now
+    function startGiftSequence(e) {
+        e.stopPropagation(); // Stop click bubbling up
+        document.getElementById('gift-overlay').style.display = 'flex';
+        
+        // Start the Rain
+        rainInterval = setInterval(() => {
+            const layer = document.getElementById('rain-layer');
+            const s = document.createElement('div');
+            s.className = 'sparkle-rain';
+            s.innerHTML = ['✨', '🌸', '💖'][Math.floor(Math.random() * 3)];
+            s.style.left = (Math.random() * 95) + '%';
+            s.style.animationDuration = (2 + Math.random() * 3) + 's';
+            layer.appendChild(s);
+            setTimeout(() => s.remove(), 5000);
+        }, 150);
+
+        setTimeout(() => {
+            document.getElementById('gift-overlay').style.opacity = '1';
+            document.getElementById('mainPhotoCard').style.transform = 'scale(1)';
+        }, 10);
     }
 
     function handleGiftAreaClick() {
@@ -250,6 +275,7 @@
             setTimeout(() => { document.getElementById('byeArea').style.opacity = '1'; }, 10);
             giftSubStep = 3;
         } else {
+            // Natural reset after "Bye" screen
             resetEverything(null);
         }
     }
@@ -257,7 +283,7 @@
     function resetEverything(e) {
         if (e) e.stopPropagation();
         currentStep = 1; giftSubStep = 1;
-        clearInterval(sparkleInterval);
+        clearInterval(rainInterval);
         document.getElementById('envelope').classList.remove('open');
         document.getElementById('backBtn').style.display = 'none';
         document.getElementById('gift-overlay').style.display = 'none';
@@ -270,3 +296,4 @@
 </script>
 </body>
 </html>
+
