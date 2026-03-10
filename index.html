@@ -21,7 +21,7 @@
             display: flex; justify-content: center; align-items: center;
             background: linear-gradient(135deg, #fce4ec 0%, #ffc1e3 100%);
             font-family: 'Georgia', serif;
-            overflow: hidden; /* Prevent body scroll */
+            overflow: hidden;
             user-select: none;
         }
 
@@ -32,16 +32,16 @@
             justify-content: center; align-items: center;
         }
 
-        /* --- ENVELOPE (STAYS ON TOP) --- */
+        /* --- ENVELOPE --- */
         .envelope-wrapper {
             position: relative;
             width: 320px; height: 220px;
             background: var(--envelope-bg);
             border-radius: 0 0 10px 10px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            z-index: 1000; /* Stays above the letter ALWAYS */
+            z-index: 1000;
             cursor: pointer;
-            margin-top: 100px; /* Space for letter to rise */
+            margin-top: 100px;
         }
 
         .flap {
@@ -69,18 +69,16 @@
             color: var(--primary); font-size: 12px; z-index: 1200;
         }
 
-        /* --- THE FIXED LETTER (Z-INDEX LOWERED) --- */
+        /* --- THE LETTER --- */
         .letter {
             position: absolute;
-            top: 10px; /* Starts inside */
-            left: 10px;
-            width: 300px;
-            height: 200px;
+            top: 10px; left: 10px;
+            width: 300px; height: 200px;
             background: var(--paper);
-            padding: 25px 15px; /* Side padding */
+            padding: 25px 15px;
             box-sizing: border-box;
-            z-index: 500; /* BEHIND envelope-wrapper z-index */
-            overflow-y: scroll; /* Forces standard scroll bar */
+            z-index: 500;
+            overflow-y: scroll;
             border-radius: 5px;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
             opacity: 0;
@@ -88,52 +86,61 @@
         }
 
         .letter h2 { color: var(--primary); text-align: center; font-size: 1.2rem; margin: 0 0 15px 0; }
-        
-        /* The main message container */
-        .letter-content p { 
-            line-height: 1.6; color: #333; font-size: 14px; white-space: pre-wrap; margin-bottom: 15px;
-        }
+        .letter-content p { line-height: 1.6; color: #333; font-size: 14px; white-space: pre-wrap; margin-bottom: 15px; }
+        .letter-content { padding-bottom: 100px; }
 
-        /* --- FIX FOR LAST WORDS AND NO-CLICK --- */
-        .letter-content {
-            /* Force extra space at bottom for the end letter to render fully */
-            padding-bottom: 100px; 
-            pointer-events: auto; /* Allow paragraph text reading */
-        }
-
-        /* --- THE REQUIRED END LETTER TRIGGER --- */
+        /* --- THE NEW CREATIVE GIFT BUTTON --- */
         #letterEndTrigger {
             text-align: center;
-            display: block;
-            margin: 0 auto;
-            width: fit-content;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 40px auto 20px auto;
             cursor: pointer;
-            z-index: 800;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: white; /* Blocks envelope text from showing through */
+            padding: 20px;
+            border-radius: 10px;
         }
+
+        #letterEndTrigger:active { transform: scale(0.9); }
+
+        .gift-box-icon {
+            font-size: 50px;
+            filter: drop-shadow(0 5px 15px rgba(216, 27, 96, 0.3));
+            animation: giftFloat 3s infinite ease-in-out;
+        }
+
+        .gift-text {
+            margin-top: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: giftShimmer 2s infinite linear;
+        }
+
+        @keyframes giftFloat {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            25% { transform: translateY(-10px) rotate(-5deg); }
+            75% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        @keyframes giftShimmer { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; transform: scale(1.05); } }
 
         /* --- ANIMATION STATES --- */
         .open .flap { transform: rotateX(180deg); z-index: 10; }
-        .open .marked-text, .open .flap-heart, .tap-tap-text { opacity: 0; }
-        
-        .open .letter {
-            opacity: 1;
-            top: -260px; /* Moves IT UP, properly emerging from envelope */
-            height: 400px; 
-        }
+        .open .marked-text, .open .flap-heart { opacity: 0; }
+        .open .letter { opacity: 1; top: -260px; height: 400px; }
 
-        /* --- START AGAIN BUTTON (TUCKED CLOSE) --- */
+        /* --- START AGAIN BUTTON --- */
         #backBtn {
-            margin-top: 15px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 2000;
-            display: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-top: 15px; background: var(--primary); color: white;
+            border: none; padding: 10px 25px; border-radius: 20px;
+            font-weight: bold; cursor: pointer; z-index: 2000;
+            display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         /* --- GIFT OVERLAY --- */
@@ -155,20 +162,8 @@
 
         @keyframes pulseText { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         
-        /* The Rain Animation */
-        @keyframes fullRain {
-            0% { transform: translateY(-10vh); opacity: 1; }
-            100% { transform: translateY(110vh); opacity: 0; }
-        }
-
-        .sparkle-rain {
-            position: fixed; top: -50px;
-            font-size: 20px; pointer-events: none;
-            z-index: 2500;
-            animation: fullRain 4s linear forwards;
-        }
-
-        @keyframes teddyBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes fullRain { 0% { transform: translateY(-10vh); opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
+        .sparkle-rain { position: fixed; top: -50px; font-size: 20px; pointer-events: none; z-index: 2500; animation: fullRain 4s linear forwards; }
     </style>
 </head>
 <body>
@@ -180,7 +175,7 @@
         <div class="flap"></div>
         <div class="flap-heart">❤️</div>
         <div class="marked-text">Happy Birthday My Miku</div>
-        <div class="tap-text" id="initialTapText">Tap to Open 💌</div>
+        <div class="tap-text">Tap to Open 💌</div>
         
         <div class="letter" id="letter">
             <div class="letter-content">
@@ -196,8 +191,8 @@
                 <p>So thats it i am concluding my letter by wishing my miku madam a Happy Birthday and A Really good year Ahead 🎂🎉</p>
                 
                 <div id="letterEndTrigger" onclick="startGiftSequence(event)">
-                    <span style="display:block; font-size:30px; margin-top:20px;">🎁</span>
-                    <span style="display:block; font-size:12px; font-weight:bold; color:var(--primary); text-decoration:underline;">Click to continue...</span>
+                    <div class="gift-box-icon">🎁</div>
+                    <div class="gift-text">✨ Tap to Unbox ✨</div>
                 </div>
             </div>
         </div>
@@ -209,7 +204,7 @@
     <div class="photo-card" id="mainPhotoCard">
         <h2 style="color: var(--text-brown); font-size: 1.5rem;">✨ For Miku ✨</h2>
         <div id="teddyArea">
-            <div style="font-size: 60px; animation: teddyBounce 2s infinite ease-in-out; display:inline-block;">🧸</div>
+            <div style="font-size: 60px;">🧸</div>
             <p style="color: var(--primary); font-weight: bold;">(Tap the bear! 📸)</p>
         </div>
         <div id="photoArea" style="display:none; opacity:0;">
@@ -240,23 +235,19 @@
         }
     }
 
-    // This is the only function that opens the gift section now
     function startGiftSequence(e) {
-        e.stopPropagation(); // Stop click bubbling up
+        e.stopPropagation();
         document.getElementById('gift-overlay').style.display = 'flex';
-        
-        // Start the Rain
         rainInterval = setInterval(() => {
             const layer = document.getElementById('rain-layer');
             const s = document.createElement('div');
             s.className = 'sparkle-rain';
             s.innerHTML = ['✨', '🌸', '💖'][Math.floor(Math.random() * 3)];
             s.style.left = (Math.random() * 95) + '%';
-            s.style.animationDuration = (2 + Math.random() * 3) + 's';
+            s.style.animationDuration = (2 + Math.random() * 2) + 's';
             layer.appendChild(s);
-            setTimeout(() => s.remove(), 5000);
+            setTimeout(() => s.remove(), 4000);
         }, 150);
-
         setTimeout(() => {
             document.getElementById('gift-overlay').style.opacity = '1';
             document.getElementById('mainPhotoCard').style.transform = 'scale(1)';
@@ -275,7 +266,6 @@
             setTimeout(() => { document.getElementById('byeArea').style.opacity = '1'; }, 10);
             giftSubStep = 3;
         } else {
-            // Natural reset after "Bye" screen
             resetEverything(null);
         }
     }
