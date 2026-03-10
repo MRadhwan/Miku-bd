@@ -74,10 +74,10 @@
             transform-origin: top; transition: transform 0.6s ease; z-index: 30;
         }
 
-        /* The text you marked */
+        /* The text on the envelope */
         .marked-text {
             position: absolute;
-            top: 135px; /* Positioned right below the flap tip */
+            top: 135px;
             width: 100%;
             text-align: center;
             color: var(--primary);
@@ -113,7 +113,27 @@
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .photo-box img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; }
+        /* --- UPDATED: Even Photo Styling --- */
+        .photo-flex {
+            display: flex; gap: 10px; justify-content: center; margin-bottom: 10px;
+        }
+
+        .photo-box {
+            width: 120px; /* Fixed even width */
+            height: 120px; /* Fixed even height */
+            background: #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid white;
+            box-shadow: 0 0 10px rgba(216, 27, 96, 0.3); /* Soft glowing border */
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Forces images into matching square crop */
+            display: block;
+        }
 
         .sparkle {
             position: absolute; font-size: 20px; pointer-events: none;
@@ -122,7 +142,7 @@
 
         /* --- STATES --- */
         .open .flap { transform: rotateX(180deg); z-index: 5; }
-        .open .marked-text { display: none; } /* Hides text when opened */
+        .open .marked-text { display: none; }
         .open .letter { opacity: 1; transform: translateY(-160px); height: 380px; z-index: 50; }
 
         #teddyDisplay { font-size: 70px; animation: teddyBounce 2.5s infinite ease-in-out; display: inline-block; }
@@ -166,7 +186,7 @@
             <p style="color: var(--primary); font-weight: bold;">(Tap the bear! 📸)</p>
         </div>
         <div id="photoArea" style="display:none; opacity:0;">
-            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 10px;">
+            <div class="photo-flex">
                 <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Young.jpg"></div>
                 <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg"></div>
             </div>
