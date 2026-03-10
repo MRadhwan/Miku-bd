@@ -51,7 +51,7 @@
             height: 520px;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centered layout */
+            justify-content: center;
             align-items: center;
         }
 
@@ -98,16 +98,26 @@
             animation: pulseText 2s infinite ease-in-out;
         }
 
+        /* --- FIXED: LETTER HEADING VISIBILITY --- */
         .letter {
             position: absolute;
             bottom: 10px; left: 10px; width: 300px; height: 200px;
-            background: var(--paper); padding: 15px; box-sizing: border-box;
+            background: var(--paper); 
+            padding: 30px 15px 15px 15px; /* Added more top padding */
+            box-sizing: border-box;
             z-index: 15; overflow-y: auto; border-radius: 5px;
             transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.8s ease, opacity 0.3s;
             opacity: 0;
         }
 
-        .letter h2 { color: var(--primary); text-align: center; font-size: 18px; }
+        .letter h2 { 
+            color: var(--primary); 
+            text-align: center; 
+            font-size: 18px; 
+            margin-top: 0; /* Ensure it starts at the very top of the padding */
+            margin-bottom: 20px;
+        }
+        
         .letter p { line-height: 1.6; color: #333; font-size: 14px; white-space: pre-wrap; }
 
         #gift-overlay {
@@ -152,14 +162,13 @@
         /* --- STATES --- */
         .open .flap { transform: rotateX(180deg); z-index: 5; }
         .open .marked-text, .open .flap-heart { display: none; }
-        .open .letter { opacity: 1; transform: translateY(-160px); height: 380px; z-index: 50; }
+        .open .letter { opacity: 1; transform: translateY(-180px); height: 400px; z-index: 50; }
 
         #teddyDisplay { font-size: 70px; animation: teddyBounce 2.5s infinite ease-in-out; display: inline-block; }
 
-        /* --- START AGAIN BUTTON (Moved Down) --- */
         #backBtn {
             position: absolute;
-            bottom: -80px; /* Moved way below the envelope */
+            bottom: -80px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--primary);
