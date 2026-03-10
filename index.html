@@ -28,10 +28,9 @@
         }
 
         /* --- ANIMATIONS --- */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
+        @keyframes pulseText {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
         }
 
         @keyframes sparkleFloat {
@@ -43,12 +42,6 @@
         @keyframes teddyBounce {
             0%, 100% { transform: translateY(0) rotate(-3deg); }
             50% { transform: translateY(-15px) rotate(3deg); }
-        }
-
-        @keyframes glowPulse {
-            0% { box-shadow: 0 0 5px rgba(216, 27, 96, 0.2); }
-            50% { box-shadow: 0 0 20px rgba(216, 27, 96, 0.6); }
-            100% { box-shadow: 0 0 5px rgba(216, 27, 96, 0.2); }
         }
 
         /* --- LAYOUT --- */
@@ -71,7 +64,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             z-index: 10;
             cursor: pointer;
-            animation: pulse 2s infinite ease-in-out; /* Pulsing effect */
         }
 
         .flap {
@@ -80,6 +72,20 @@
             border-left: 160px solid transparent; border-right: 160px solid transparent;
             border-top: 130px solid var(--flap-color);
             transform-origin: top; transition: transform 0.6s ease; z-index: 30;
+        }
+
+        /* The text you marked */
+        .marked-text {
+            position: absolute;
+            top: 135px; /* Positioned right below the flap tip */
+            width: 100%;
+            text-align: center;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 18px;
+            z-index: 40;
+            pointer-events: none;
+            animation: pulseText 2s infinite ease-in-out;
         }
 
         .letter {
@@ -107,11 +113,7 @@
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .photo-box { 
-            width: 46%; background: #eee; border-radius: 8px; overflow: hidden;
-            animation: glowPulse 2s infinite ease-in-out;
-        }
-        .photo-box img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
+        .photo-box img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; }
 
         .sparkle {
             position: absolute; font-size: 20px; pointer-events: none;
@@ -120,8 +122,8 @@
 
         /* --- STATES --- */
         .open .flap { transform: rotateX(180deg); z-index: 5; }
+        .open .marked-text { display: none; } /* Hides text when opened */
         .open .letter { opacity: 1; transform: translateY(-160px); height: 380px; z-index: 50; }
-        .open.envelope-wrapper { animation: none; }
 
         #teddyDisplay { font-size: 70px; animation: teddyBounce 2.5s infinite ease-in-out; display: inline-block; }
     </style>
@@ -131,7 +133,11 @@
 <div class="viewport">
     <div class="envelope-wrapper" id="envelope" onclick="handleEnvelopeClick()">
         <div class="flap"></div>
-        <div class="front-text" style="position:absolute; bottom:20px; width:100%; text-align:center; color:var(--primary); font-weight:bold; z-index:40;">Tap to Open 💌</div>
+        
+        <div class="marked-text">Happy Birthday My Miku</div>
+        
+        <div class="front-text" style="position:absolute; bottom:15px; width:100%; text-align:center; color:var(--primary); font-size: 12px; z-index:40;">Tap to Open 💌</div>
+        
         <div class="pocket-front" style="position:absolute; bottom:0; width:100%; height:100%; background:var(--envelope-bg); border:2px dashed #b71c1c; border-radius:0 0 10px 10px; z-index:20; pointer-events:none;"></div>
         
         <div class="letter" id="letter" onclick="handleLetterClick(event)">
@@ -164,12 +170,12 @@
                 <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Young.jpg"></div>
                 <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg"></div>
             </div>
-            <p style="font-weight: bold; color: var(--text-brown); letter-spacing: 2px; margin: 5px 0;">LONG JOURNEY</p>
-            <p style="color: var(--primary); font-size: 11px;">(Tap again for one more thing... ✨)</p>
+            <p style="font-weight: bold; color: var(--text-brown); letter-spacing: 2px;">LONG JOURNEY</p>
+            <p style="color: var(--primary); font-size: 11px;">(Tap again... ✨)</p>
         </div>
         <div id="byeArea" style="display:none; opacity:0;">
-            <h3 style="color: var(--primary); margin: 5px 0;">Hope u like it!</h3>
-            <p style="font-size: 14px;">Happy Birthday, Oldie! 🌸</p>
+            <h3 style="color: var(--primary);">Hope u like it!</h3>
+            <p>Happy Birthday, Oldie! 🌸</p>
         </div>
     </div>
 </div>
@@ -237,7 +243,6 @@
         document.getElementById('teddyArea').style.display = 'block';
         document.getElementById('photoArea').style.display = 'none';
         document.getElementById('byeArea').style.display = 'none';
-        document.getElementById('letter').scrollTop = 0;
     }
 </script>
 </body>
