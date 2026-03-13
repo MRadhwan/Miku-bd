@@ -2,134 +2,191 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Birthday Surprise for Miku</title>
     <style>
         :root {
-            --primary: #d81b60;
-            --envelope-bg: #ffcdd2;
-            --flap-color: #ff80ab;
+            --primary: #c2185b;
+            --envelope-bg: #ff80ab;
+            --flap-color: #ff4081;
             --paper: #ffffff;
-            --gift-bg: #fffbf0;
-            --gold: #c5a028;
-            --text-brown: #5d4037;
+            --gold: #d4af37;
         }
 
         body {
-            margin: 0; padding: 0;
-            height: 100vh; width: 100vw;
+            margin: 0; padding: 0; background: #fce4ec;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex; justify-content: center; align-items: center;
-            background: linear-gradient(135deg, #fce4ec 0%, #ffc1e3 100%);
-            font-family: 'Georgia', serif;
-            overflow: hidden;
-            user-select: none;
+            height: 100vh; overflow: hidden;
         }
 
-        .main-container {
-            position: relative;
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
+        .main-container { 
+            position: relative; width: 100%; height: 100%; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .main-container.shifted { transform: translateY(160px); }
 
         /* --- ENVELOPE --- */
         .envelope-wrapper {
-            position: relative;
-            width: 320px; height: 220px;
-            background: var(--envelope-bg);
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            position: relative; width: 300px; height: 200px;
+            background: var(--envelope-bg); border-radius: 0 0 10px 10px;
+            cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             z-index: 1000;
-            cursor: pointer;
-            margin-top: 100px;
         }
 
         .flap {
-            position: absolute;
-            top: 0; left: 0; width: 0; height: 0;
-            border-left: 160px solid transparent; border-right: 160px solid transparent;
-            border-top: 130px solid var(--flap-color);
-            transform-origin: top; transition: transform 0.6s ease; z-index: 1500;
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-left: 150px solid transparent; border-right: 150px solid transparent;
+            border-top: 110px solid var(--flap-color); transform-origin: top; 
+            transition: transform 0.6s ease; z-index: 1500;
         }
 
         .flap-heart {
-            position: absolute; top: 110px; width: 100%; text-align: center;
-            color: #b71c1c; font-size: 28px; z-index: 1600; pointer-events: none;
+            position: absolute; top: 90px; width: 100%; text-align: center;
+            color: #c2185b; font-size: 32px; z-index: 1600; pointer-events: none;
+            transition: opacity 0.3s;
         }
 
         .marked-text {
-            position: absolute; top: 145px; width: 100%; text-align: center;
-            color: var(--primary); font-weight: bold; font-size: 18px;
-            z-index: 1200; pointer-events: none;
-            animation: pulseText 2s infinite ease-in-out;
+            position: absolute; top: 135px; width: 100%; text-align: center;
+            color: white; font-weight: bold; font-size: 16px; z-index: 1200; pointer-events: none;
         }
 
         .tap-text {
             position: absolute; bottom: 15px; width: 100%; text-align:center;
-            color: var(--primary); font-size: 12px; z-index: 1200;
+            color: white; font-size: 11px; z-index: 1200; opacity: 0.9;
         }
 
-        /* --- THE LETTER --- */
+        /* --- LETTER --- */
         .letter {
-            position: absolute;
-            top: 10px; left: 10px;
-            width: 300px; height: 200px;
-            background: var(--paper);
-            padding: 25px 15px;
-            box-sizing: border-box;
-            z-index: 500;
-            overflow-y: scroll;
-            border-radius: 5px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            opacity: 0;
+            position: absolute; 
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px; height: 180px; background: var(--paper);
+            padding: 25px 20px; box-sizing: border-box; z-index: 2000; 
+            overflow-y: scroll; border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1); opacity: 0;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-top: 4px solid var(--primary);
         }
 
-        .letter h2 { color: var(--primary); text-align: center; font-size: 1.2rem; margin: 0 0 15px 0; }
+        .letter-content { padding-bottom: 20px; text-align: left; }
+        .letter h2 { color: var(--primary); text-align: center; font-size: 1.2rem; margin-bottom: 15px; }
         .letter-content p { line-height: 1.6; color: #333; font-size: 14px; white-space: pre-wrap; margin-bottom: 15px; }
-        .letter-content { padding-bottom: 100px; }
 
-        /* --- THE CREATIVE GIFT BUTTON --- */
         #letterEndTrigger {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 40px auto 20px auto;
-            cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin: 30px auto; padding: 15px; width: 90%;
+            cursor: pointer; border: 1.5px dashed var(--primary); border-radius: 12px;
+            background: #fff0f5; transition: transform 0.2s;
         }
 
-        #letterEndTrigger:active { transform: scale(0.9); }
-        .gift-box-icon { font-size: 50px; animation: giftFloat 3s infinite ease-in-out; }
-        .gift-text { margin-top: 10px; font-size: 13px; font-weight: bold; color: var(--primary); text-transform: uppercase; animation: giftShimmer 2s infinite linear; }
-
-        @keyframes giftFloat { 0%, 100% { transform: translateY(0) rotate(0); } 25% { transform: translateY(-10px) rotate(-5deg); } 75% { transform: translateY(-10px) rotate(5deg); } }
-        @keyframes giftShimmer { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; transform: scale(1.05); } }
-
-        /* --- MUSIC TOGGLE --- */
-        #musicToggle {
-            position: fixed; top: 20px; right: 20px;
-            background: white; border-radius: 50%; width: 40px; height: 40px;
-            display: none; justify-content: center; align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 4000; cursor: pointer;
+        .heart-logo-egg {
+            display: block; margin: 20px auto 0 auto;
+            font-size: 14px; color: #fce4ec; cursor: pointer;
+            user-select: none; transition: color 0.3s;
+            text-align: center;
         }
 
         /* --- ANIMATION STATES --- */
         .open .flap { transform: rotateX(180deg); z-index: 10; }
         .open .marked-text, .open .flap-heart { opacity: 0; }
-        .open .letter { opacity: 1; top: -260px; height: 400px; }
+        .open .letter { 
+            opacity: 1; 
+            transform: translate(-50%, -115%);
+            height: 420px; 
+        }
 
-        /* --- START AGAIN BUTTON --- */
+        .pop-element {
+            position: absolute; bottom: 20%; left: 50%;
+            transform: translate(-50%, 0) scale(0);
+            font-size: 80px; z-index: 1800;
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none; opacity: 0;
+        }
+        .pop-element.active { transform: translate(-50%, -120%) scale(1.8) rotate(360deg); opacity: 1; pointer-events: auto;}
+
+        /* --- CAKE EASTER EGG CSS --- */
+        #cake-box {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 5000; transition: 0.5s; text-align: center; pointer-events: none;
+        }
+        #cake-box.show { transform: translate(-50%, -50%) scale(2.5); }
+        .cake-emoji { font-size: 60px; position: relative; display: inline-block; }
+        .knife { position: absolute; top: -10px; right: -10px; font-size: 30px; transform: rotate(-45deg); opacity: 0; }
+        .cutting .knife { animation: cutAction 1s forwards; opacity: 1; }
+        
+        @keyframes cutAction {
+            0% { transform: rotate(-45deg) translate(0, 0); }
+            50% { transform: rotate(-10deg) translate(-25px, 25px); }
+            100% { transform: rotate(-45deg) translate(0, 0); opacity: 0; }
+        }
+
+        /* PHOTO BUTTON */
+        #photo-share-btn {
+            display: none; position: fixed; top: 60%; left: 50%; transform: translateX(-50%);
+            background: var(--primary); color: white; border: none; padding: 12px 20px;
+            border-radius: 30px; font-weight: bold; cursor: pointer; z-index: 6000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s;
+        }
+
+        /* SECRET MODAL STYLES */
+        #secret-modal {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            background: white; padding: 30px; border-radius: 25px; width: 280px;
+            box-shadow: 0 20px 50px rgba(194,24,91,0.3); z-index: 7000;
+            text-align: center; border: 2px solid #fce4ec; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #secret-modal.show { transform: translate(-50%, -50%) scale(1); }
+
+        .secret-title { color: #880e4f; font-weight: bold; margin-bottom: 20px; font-size: 18px; }
+        .secret-msg { 
+            display: none; color: var(--primary); font-size: 20px; font-style: italic; 
+            animation: heartBeat 1.5s infinite; line-height: 1.4;
+        }
+        .signature { display: block; font-size: 14px; margin-top: 10px; color: #5d4037; font-weight: normal; }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* PRANK MENU */
+        #interactive-menu {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            background: white; padding: 25px; border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); z-index: 4000;
+            text-align: center; width: 280px; transition: 0.5s;
+        }
+        #interactive-menu.show { transform: translate(-50%, -50%) scale(1); }
+
+        .menu-btns { display: flex; gap: 10px; justify-content: center; margin-top: 25px; position: relative; min-height: 100px; }
+        .m-btn { border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.1s; }
+        
+        #yes-container { position: relative; z-index: 10; transition: 0.2s; }
+        .btn-yes { background: var(--primary); color: white; width: 80px; }
+        .btn-no { background: #fce4ec; color: #c2185b; width: 80px; }
+
+        #puppy-face {
+            display: none; position: absolute; bottom: 110%; left: 50%;
+            transform: translateX(-50%); font-size: 30px; pointer-events: none;
+        }
+
         #backBtn {
-            margin-top: 15px; background: var(--primary); color: white;
+            margin-top: 40px; background: var(--primary); color: white;
             border: none; padding: 10px 25px; border-radius: 20px;
             font-weight: bold; cursor: pointer; z-index: 2000;
-            display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            visibility: hidden; opacity: 0; transition: opacity 0.5s;
+        }
+
+        #musicToggle {
+            position: fixed; top: 20px; right: 20px;
+            background: white; border-radius: 50%; width: 40px; height: 40px;
+            display: none; justify-content: center; align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 4000; cursor: pointer;
         }
 
         /* --- GIFT OVERLAY --- */
@@ -140,18 +197,25 @@
         }
 
         .photo-card {
-            width: 90%; max-width: 380px; background: var(--gift-bg);
+            width: 85%; max-width: 350px; background: #fffbf0;
             padding: 20px; border-radius: 15px; text-align: center;
             border: 3px double var(--gold); transform: scale(0.8); transition: 0.5s;
         }
 
+        .flash-active { box-shadow: 0 0 60px 20px white !important; }
         .photo-flex { display: flex; gap: 10px; justify-content: center; margin: 15px 0; }
-        .photo-box { width: 130px; height: 130px; border-radius: 8px; overflow: hidden; border: 2px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .photo-box { width: 120px; height: 120px; border-radius: 8px; overflow: hidden; border: 2px solid white; }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .teddy-bear { font-size: 60px; display: inline-block; animation: floatBear 2s ease-in-out infinite; }
+        @keyframes floatBear {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
 
-        @keyframes pulseText { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        @keyframes fullRain { 0% { transform: translateY(-10vh); opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
         .sparkle-rain { position: fixed; top: -50px; font-size: 20px; pointer-events: none; z-index: 2500; animation: fullRain 4s linear forwards; }
+        @keyframes fullRain { 0% { transform: translateY(-10vh); opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
+        .grandma-text { display: inline-block; color: #880e4f; font-weight: bold; animation: wiggle 0.5s infinite; }
+        @keyframes wiggle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
     </style>
 </head>
 <body>
@@ -163,41 +227,77 @@
 <div id="musicToggle" onclick="toggleMusic()">🎵</div>
 <div id="rain-layer" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2500;"></div>
 
-<div class="main-container">
+<div class="main-container" id="mainWrapper">
     <div class="envelope-wrapper" id="envelope" onclick="handleEnvelopeClick()">
         <div class="flap"></div>
         <div class="flap-heart">❤️</div>
         <div class="marked-text">Happy Birthday My Miku</div>
         <div class="tap-text">Tap to Open 💌</div>
         
+        <div class="pop-element" id="flowerPop">🌸</div>
+        <div class="pop-element" id="chocolatePop" onclick="handleChocolateClick()">🍫</div>
+
         <div class="letter" id="letter">
             <div class="letter-content">
                 <h2>Dearest Miku Madam,</h2>
                 <p>Today is ur day my miku madam..Mar 24th 2009 The day u were cherished into earth to be the laughter and the future of ur family...</p>
                 <p>And this year I wish u have wonderfully experiences which u couldn't experience last year..so I hope u get the chance to experience them this year..I also wish best of luck on ur 12th..but today is nothing but focus on ur birthday..</p>
-                <p>ur the sweetest,kindest and pretty lady...now ur aging to a grandma but that dosent matter grandma's are also a charm so ur a bright star..hope all ur hardwork turns to reality in these coming days..</p>
+                <p>ur the sweetest,kindest and pretty lady...now ur aging to a <span class="grandma-text">grandma</span> but that dosent matter grandma's are also a charm so ur a bright star..hope all ur hardwork turns to reality in these coming days..</p>
                 <p>if anything bothers u just keep getting through it like evry year..this is ur day and the upcoming year is the test..so stay strong and enjoy the few years of childhoodness before it vanishes into the reality and responsibilities take over..so cherish evrey moment of this year and keep cherishing until ur an old granny..</p>
                 <p>17 now..17 years of experiencing the moments of life with everyone..keep it up..life is only lived once so live to the fullest cause once you grow even older u might or can experience those experiences again so dont miss any opportunity trust urself and take the decisions and prove u were right keep being awesome evry year and get more pretty than pretty in these coming years..</p>
                 <p>so nothing else I wish u a very happy birthday..enjoy the day and forget about every other stress just relax and enjoy ur day cause who knows who all will be there the next year so enjoy with everyone make everyone happy as they looked after u and made u happy..</p>
                 <p>HAPPY BIRTHDAY TO MY DEAREST MIKU MADAM..and oldie</p>
                 <p>No gift...this letter is the only thing I can give from my side cause thats all I am capable of but..I am not happy with just a letter everyone gives these on birthdays..I am unique..I wanna give a present I will find a way to give if not..well...this letter is the only best gift I can give..so yea...enjoy the year,stay focused and achieve ur dream u wished to..never give up..if u do..remember urself trying for it..</p>
-                <p>So thats it i am concluding my letter by wishing my miku madam a Happy Birthday and A Really good year Ahead 🎂🎉</p>
                 
                 <div id="letterEndTrigger" onclick="startGiftSequence(event)">
-                    <div class="gift-box-icon">🎁</div>
-                    <div class="gift-text">✨ Tap to Unbox ✨</div>
+                    <div style="font-size: 40px;">🎁</div>
+                    <div style="margin-top: 5px; font-size: 13px; font-weight: bold; color: var(--primary); text-transform: uppercase;">Tap to Unbox</div>
                 </div>
+                <div class="heart-logo-egg" onclick="revealSecret(event)">❤</div>
             </div>
         </div>
     </div>
-    <button id="backBtn" onclick="resetEverything(event)">Start Again</button>
+    <button id="backBtn" onclick="location.reload()">Start Again</button>
+</div>
+
+<div id="cake-box">
+    <div class="cake-emoji" id="cakeEmoji">🎂<span class="knife">🔪</span></div>
+    <p style="font-weight: bold; color: var(--primary); font-size: 14px; margin-top: 10px;">MAKE A WISH!</p>
+</div>
+
+<button id="photo-share-btn" onclick="handlePhotoOption()">oru photo kitho my miku madam?</button>
+
+<div id="secret-modal">
+    <div id="ask-content">
+        <p class="secret-title">So... is Miku Madam going to share a photo? ✨</p>
+        <div class="menu-btns" style="min-height: auto;">
+            <button class="m-btn btn-yes" onclick="revealWaitingMsg()">Yes!</button>
+            <button class="m-btn btn-no" onclick="closeSecretModal()">No</button>
+        </div>
+    </div>
+    <div id="msg-content" class="secret-msg">
+        "Thank uu, i will waittt..."
+        <span class="signature">- Radhwan</span>
+        <div style="margin-top:15px; font-size: 25px;">⏳💖</div>
+    </div>
+</div>
+
+<div id="interactive-menu">
+    <h3 id="menu-text" style="color:#5d4037;">Did you like the surprise?</h3>
+    <div class="menu-btns">
+        <div id="yes-container">
+            <div id="puppy-face">🥺</div>
+            <button class="m-btn btn-yes" id="yes-btn" onclick="handleMenuResponse(true)">YES!</button>
+        </div>
+        <button class="m-btn btn-no" id="no-btn" onclick="handleMenuResponse(false)">No</button>
+    </div>
 </div>
 
 <div id="gift-overlay" onclick="handleGiftAreaClick()">
     <div class="photo-card" id="mainPhotoCard">
-        <h2 style="color: var(--text-brown); font-size: 1.5rem;">✨ For Miku ✨</h2>
+        <h2 style="color: #5d4037; font-size: 1.4rem;">✨ For Miku ✨</h2>
         <div id="teddyArea">
-            <div style="font-size: 60px;">🧸</div>
+            <div class="teddy-bear">🧸</div>
             <p style="color: var(--primary); font-weight: bold;">(Tap the bear! 📸)</p>
         </div>
         <div id="photoArea" style="display:none; opacity:0;">
@@ -205,8 +305,7 @@
                 <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Young.jpg"></div>
                 <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg"></div>
             </div>
-            <p style="font-weight: bold; color: var(--text-brown); letter-spacing: 2px;">LONG JOURNEY</p>
-            <p style="color: var(--primary); font-size: 11px;">(Tap again... ✨)</p>
+            <p style="font-weight: bold; color: #5d4037; letter-spacing: 2px;">LONG JOURNEY</p>
         </div>
         <div id="byeArea" style="display:none; opacity:0;">
             <h3 style="color: var(--primary);">Hope u like it!</h3>
@@ -216,23 +315,59 @@
 </div>
 
 <script>
-    let currentStep = 1;
-    let giftSubStep = 1;
-    let rainInterval;
+    let currentStep = 1; let giftSubStep = 1; let chocolateClicks = 0;
+    let rainInterval; let isPrankActive = false;
     const music = document.getElementById('bgMusic');
 
     function handleEnvelopeClick() {
         if (currentStep === 1) {
             music.play().catch(e => console.log("Audio blocked"));
             document.getElementById('musicToggle').style.display = 'flex';
+            document.getElementById('mainWrapper').classList.add('shifted');
             document.getElementById('envelope').classList.add('open');
-            document.getElementById('backBtn').style.display = 'block';
+            document.getElementById('backBtn').style.visibility = 'visible';
+            document.getElementById('backBtn').style.opacity = '1';
             currentStep = 2;
         }
     }
 
-    function toggleMusic() {
-        if (music.paused) { music.play(); } else { music.pause(); }
+    function toggleMusic() { music.paused ? music.play() : music.pause(); }
+
+    function handlePhotoOption() {
+        const modal = document.getElementById('secret-modal');
+        document.getElementById('ask-content').style.display = 'block';
+        document.getElementById('msg-content').style.display = 'none';
+        modal.style.display = 'block';
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    function revealWaitingMsg() {
+        document.getElementById('ask-content').style.display = 'none';
+        document.getElementById('msg-content').style.display = 'block';
+        setTimeout(closeSecretModal, 4000);
+    }
+
+    function closeSecretModal() {
+        const modal = document.getElementById('secret-modal');
+        modal.classList.remove('show');
+        setTimeout(() => { modal.style.display = 'none'; }, 400);
+    }
+
+    function handleChocolateClick() {
+        chocolateClicks++;
+        if (chocolateClicks === 3) {
+            document.getElementById('chocolatePop').classList.remove('active');
+            const cakeBox = document.getElementById('cake-box');
+            cakeBox.classList.add('show');
+            setTimeout(() => {
+                document.getElementById('cakeEmoji').classList.add('cutting');
+                setTimeout(() => {
+                    alert("🍰 Slice! Happy Birthday, Miku!");
+                    cakeBox.classList.remove('show');
+                    document.getElementById('photo-share-btn').style.display = 'block';
+                }, 1200);
+            }, 500);
+        }
     }
 
     function startGiftSequence(e) {
@@ -244,7 +379,6 @@
             s.className = 'sparkle-rain';
             s.innerHTML = ['✨', '🌸', '💖'][Math.floor(Math.random() * 3)];
             s.style.left = (Math.random() * 95) + '%';
-            s.style.animationDuration = (2 + Math.random() * 2) + 's';
             layer.appendChild(s);
             setTimeout(() => s.remove(), 4000);
         }, 150);
@@ -255,6 +389,9 @@
     }
 
     function handleGiftAreaClick() {
+        const card = document.getElementById('mainPhotoCard');
+        card.classList.add('flash-active');
+        setTimeout(() => card.classList.remove('flash-active'), 200);
         if (giftSubStep === 1) {
             document.getElementById('teddyArea').style.display = 'none';
             document.getElementById('photoArea').style.display = 'block';
@@ -266,27 +403,50 @@
             setTimeout(() => { document.getElementById('byeArea').style.opacity = '1'; }, 10);
             giftSubStep = 3;
         } else {
-            resetEverything(null);
+            document.getElementById('gift-overlay').style.display = 'none';
+            document.getElementById('letter').style.transform = "translate(-140%, -115%) rotate(-8deg) scale(0.7)";
+            document.getElementById('letter').style.opacity = "0.4";
+            setTimeout(() => {
+                document.getElementById('flowerPop').classList.add('active');
+                setTimeout(() => {
+                    document.getElementById('flowerPop').classList.remove('active');
+                    document.getElementById('interactive-menu').classList.add('show');
+                }, 2000);
+            }, 600);
         }
     }
 
-    function resetEverything(e) {
-        if (e) e.stopPropagation();
-        currentStep = 1; giftSubStep = 1;
-        clearInterval(rainInterval);
-        music.pause();
-        music.currentTime = 0;
-        document.getElementById('musicToggle').style.display = 'none';
-        document.getElementById('envelope').classList.remove('open');
-        document.getElementById('backBtn').style.display = 'none';
-        document.getElementById('gift-overlay').style.display = 'none';
-        document.getElementById('gift-overlay').style.opacity = '0';
-        document.getElementById('teddyArea').style.display = 'block';
-        document.getElementById('photoArea').style.display = 'none';
-        document.getElementById('byeArea').style.display = 'none';
-        document.getElementById('letter').scrollTop = 0;
+    function handleMenuResponse(isYes) {
+        const puppy = document.getElementById('puppy-face');
+        if (isYes) {
+            if (!isPrankActive) {
+                document.getElementById('interactive-menu').classList.remove('show');
+                document.getElementById('chocolatePop').classList.add('active');
+            } else { moveYes(); }
+        } else {
+            if (!isPrankActive) {
+                isPrankActive = true; 
+                document.getElementById('menu-text').innerHTML = "Are you sure? 🤨";
+                document.getElementById('no-btn').innerHTML = "Nvm...";
+                puppy.style.display = 'block'; 
+                moveYes();
+            } else {
+                isPrankActive = false; 
+                document.getElementById('menu-text').innerHTML = "Did you like the surprise?";
+                document.getElementById('no-btn').innerHTML = "No";
+                document.getElementById('yes-container').style.transform = "translate(0,0)";
+                puppy.style.display = 'none';
+            }
+        }
     }
+
+    function moveYes() {
+        const container = document.getElementById('yes-container');
+        const x = Math.random() * 100 - 50; const y = Math.random() * 60 - 30;
+        container.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    function revealSecret(e) { e.stopPropagation(); alert("Wait, you actually found the hidden heart?!..Neee pwoliiii anneeee mwolleee...Happy Birthday again, Miku Madam!"); }
 </script>
 </body>
 </html>
-
