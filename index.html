@@ -89,6 +89,7 @@
             user-select: none; transition: color 0.3s;
             text-align: center;
         }
+        .egg-hint { font-size: 9px; color: #fce4ec; text-align: center; margin-top: 5px; opacity: 0.8; font-style: italic; }
 
         /* --- ANIMATION STATES --- */
         .open .flap { transform: rotateX(180deg); z-index: 10; }
@@ -108,7 +109,13 @@
         }
         .pop-element.active { transform: translate(-50%, -120%) scale(1.8) rotate(360deg); opacity: 1; pointer-events: auto;}
 
-        /* --- CAKE EASTER EGG CSS --- */
+        .tap-hint-chocolate {
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            font-size: 12px; color: #5d4037; font-weight: bold; background: rgba(255,255,255,0.8);
+            padding: 2px 8px; border-radius: 10px; white-space: nowrap;
+        }
+
+        /* --- CAKE EASTER EGG --- */
         #cake-box {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0);
@@ -125,15 +132,34 @@
             100% { transform: rotate(-45deg) translate(0, 0); opacity: 0; }
         }
 
-        /* PHOTO BUTTON */
-        #photo-share-btn {
+        /* PHOTO BUTTON CONTAINER */
+        #photo-container {
             display: none; position: fixed; top: 60%; left: 50%; transform: translateX(-50%);
-            background: var(--primary); color: white; border: none; padding: 12px 20px;
-            border-radius: 30px; font-weight: bold; cursor: pointer; z-index: 6000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s;
+            z-index: 6000; text-align: center;
+        }
+        
+        #photo-share-btn {
+            background: var(--primary); color: white; border: none; padding: 15px 25px;
+            border-radius: 50px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(194, 24, 91, 0.4); transition: 0.3s;
+            animation: pulseBtn 2s infinite;
+        }
+        
+        #photo-share-btn:active { transform: scale(0.9); }
+
+        .btn-hint {
+            font-size: 10px; color: var(--primary); font-weight: bold;
+            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
+            animation: blink 1s infinite;
         }
 
-        /* SECRET MODAL STYLES */
+        @keyframes pulseBtn {
+            0% { box-shadow: 0 0 0 0 rgba(194, 24, 91, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(194, 24, 91, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(194, 24, 91, 0); }
+        }
+
+        /* SECRET MODAL */
         #secret-modal {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
             background: white; padding: 30px; border-radius: 25px; width: 280px;
@@ -212,6 +238,9 @@
             50% { transform: translateY(-12px) rotate(2deg); }
         }
 
+        .continue-hint { font-size: 11px; color: var(--primary); font-weight: bold; margin-top: 15px; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
         .sparkle-rain { position: fixed; top: -50px; font-size: 20px; pointer-events: none; z-index: 2500; animation: fullRain 4s linear forwards; }
         @keyframes fullRain { 0% { transform: translateY(-10vh); opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
         .grandma-text { display: inline-block; color: #880e4f; font-weight: bold; animation: wiggle 0.5s infinite; }
@@ -235,7 +264,10 @@
         <div class="tap-text">Tap to Open 💌</div>
         
         <div class="pop-element" id="flowerPop">🌸</div>
-        <div class="pop-element" id="chocolatePop" onclick="handleChocolateClick()">🍫</div>
+        <div class="pop-element" id="chocolatePop" onclick="handleChocolateClick()">
+            🍫
+            <div class="tap-hint-chocolate">Tap x3!</div>
+        </div>
 
         <div class="letter" id="letter">
             <div class="letter-content">
@@ -253,6 +285,7 @@
                     <div style="font-size: 40px;">🎁</div>
                     <div style="margin-top: 5px; font-size: 13px; font-weight: bold; color: var(--primary); text-transform: uppercase;">Tap to Unbox</div>
                 </div>
+                <div class="egg-hint">...smth is hidden ryt below this..maybe a hidden heart?...</div>
                 <div class="heart-logo-egg" onclick="revealSecret(event)">❤</div>
             </div>
         </div>
@@ -265,7 +298,10 @@
     <p style="font-weight: bold; color: var(--primary); font-size: 14px; margin-top: 10px;">MAKE A WISH!</p>
 </div>
 
-<button id="photo-share-btn" onclick="handlePhotoOption()">oru photo kitho my miku madam?</button>
+<div id="photo-container">
+    <div class="btn-hint">Tap here! ✨</div>
+    <button id="photo-share-btn" onclick="handlePhotoOption()">oru photo kitho my miku madam? 📸</button>
+</div>
 
 <div id="secret-modal">
     <div id="ask-content">
@@ -306,10 +342,12 @@
                 <div class="photo-box"><img src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg"></div>
             </div>
             <p style="font-weight: bold; color: #5d4037; letter-spacing: 2px;">LONG JOURNEY</p>
+            <p class="continue-hint">Tap to continue...</p>
         </div>
         <div id="byeArea" style="display:none; opacity:0;">
             <h3 style="color: var(--primary);">Hope u like it!</h3>
             <p>Happy Birthday, Oldie! 🌸</p>
+            <p class="continue-hint">Tap to finish unboxing...</p>
         </div>
     </div>
 </div>
@@ -364,7 +402,7 @@
                 setTimeout(() => {
                     alert("🍰 Slice! Happy Birthday, Miku!");
                     cakeBox.classList.remove('show');
-                    document.getElementById('photo-share-btn').style.display = 'block';
+                    document.getElementById('photo-container').style.display = 'block';
                 }, 1200);
             }, 500);
         }
@@ -372,7 +410,9 @@
 
     function startGiftSequence(e) {
         e.stopPropagation();
-        document.getElementById('gift-overlay').style.display = 'flex';
+        const overlay = document.getElementById('gift-overlay');
+        overlay.style.display = 'flex';
+        
         rainInterval = setInterval(() => {
             const layer = document.getElementById('rain-layer');
             const s = document.createElement('div');
@@ -382,16 +422,18 @@
             layer.appendChild(s);
             setTimeout(() => s.remove(), 4000);
         }, 150);
+
         setTimeout(() => {
-            document.getElementById('gift-overlay').style.opacity = '1';
+            overlay.style.opacity = '1';
             document.getElementById('mainPhotoCard').style.transform = 'scale(1)';
-        }, 10);
+        }, 50);
     }
 
     function handleGiftAreaClick() {
         const card = document.getElementById('mainPhotoCard');
         card.classList.add('flash-active');
         setTimeout(() => card.classList.remove('flash-active'), 200);
+        
         if (giftSubStep === 1) {
             document.getElementById('teddyArea').style.display = 'none';
             document.getElementById('photoArea').style.display = 'block';
@@ -450,3 +492,4 @@
 </script>
 </body>
 </html>
+
