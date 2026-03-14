@@ -424,8 +424,17 @@
         e.stopPropagation();
         isGrandmaMode = !isGrandmaMode;
         showToast(isGrandmaMode ? "Grandma Mode: Activated" : "Grandma Mode: Deactivated", isGrandmaMode ? "👵" : "✨", 2500);
-        if (isGrandmaMode) document.body.classList.add('vintage-mode');
-        else document.body.classList.remove('vintage-mode');
+        if (isGrandmaMode) {
+            document.body.classList.add('vintage-mode');
+            // Music shift for Grandma Mode
+            music.playbackRate = 0.85; // Slowed effect
+            music.volume = 0.5;        // Muffled volume
+        } else {
+            document.body.classList.remove('vintage-mode');
+            // Reset to normal
+            music.playbackRate = 1.0;
+            music.volume = 1.0;
+        }
     }
 
     function revealSecret(e) { 
