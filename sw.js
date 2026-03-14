@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miku-birthday-v14';
+const CACHE_NAME = 'miku-birthday-v15';
 const ASSETS = [
     './',
     './index.html',
@@ -27,4 +27,11 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
     event.respondWith(caches.match(event.request).then((response) => response || fetch(event.request)));
+});
+
+// Listener to handle immediate activation from the update banner
+self.addEventListener('message', (event) => {
+    if (event.data === 'skipWaiting') {
+        self.skipWaiting();
+    }
 });
