@@ -58,9 +58,17 @@
         .lock-btn {
             background: var(--primary); color: white; border: none;
             padding: 12px 30px; border-radius: 20px; font-weight: bold; cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        /* NEW HINT BUTTON STYLE */
+        /* NEW ERROR ANIMATION */
+        .shake-error { animation: shake 0.4s ease-in-out; color: #d32f2f !important; font-weight: bold; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
         .hint-trigger {
             margin-top: 25px; display: inline-flex; flex-direction: column; align-items: center; cursor: pointer;
         }
@@ -346,8 +354,8 @@
         <p style="font-size: 12px; color: #888;">Only Miku Madam can enter... ✨</p>
         
         <input type="password" id="pass-input" placeholder="Enter Secret Code">
-        <button class="lock-btn" onclick="checkPass()">Unlock</button>
-        <p id="lock-error" style="color: red; font-size: 11px; margin-top: 10px; display: none;">Wrong code! Try again. 🤫</p>
+        <button class="lock-btn" id="unlock-btn" onclick="checkPass()">Unlock</button>
+        <p id="lock-error" style="font-size: 12px; margin-top: 10px; display: none;">Wrong code! Try again. 🤫</p>
         
         <div class="hint-trigger" onclick="showHint()">
             <div class="info-icon">i</div>
@@ -472,19 +480,47 @@
     let currentStep = 1; let giftSubStep = 1; let chocolateClicks = 0;
     let rainInterval; let isPrankActive = false;
     let yesScale = 1; let isGrandmaMode = false;
+    let errorCount = 0;
     const music = document.getElementById('bgMusic');
+
+    const prankMessages = [
+        "Wrong code! Try again. 🤫",
+        "Miku Madam wouldn't forget... 🤨",
+        "Access Denied! 🛑",
+        "Are you a hacker? 🕵️‍♀️",
+        "Grandma, is that you? 👵",
+        "Click the info button if you're stuck! ✨",
+        "Almost... but not quite! 🤭"
+    ];
 
     function checkPass() {
         const input = document.getElementById('pass-input').value;
         const error = document.getElementById('lock-error');
+        const unlockBtn = document.getElementById('unlock-btn');
+
         if(input === '2403') {
             if (navigator.vibrate) { navigator.vibrate(100); }
             const screen = document.getElementById('lock-screen');
             screen.style.opacity = '0';
             setTimeout(() => screen.style.display = 'none', 600);
         } else {
+            errorCount++;
             if (navigator.vibrate) { navigator.vibrate([50, 50, 50]); }
+            
+            // Creative error messaging
+            error.innerHTML = prankMessages[errorCount % prankMessages.length];
             error.style.display = 'block';
+            error.classList.remove('shake-error');
+            void error.offsetWidth; // Trigger reflow for animation
+            error.classList.add('shake-error');
+            
+            // Prank: Move the button slightly if they fail 3+ times
+            if (errorCount >= 3) {
+                const x = Math.random() * 40 - 20;
+                unlockBtn.style.transform = `translateX(${x}px)`;
+                setTimeout(() => unlockBtn.style.transform = 'translateX(0)', 300);
+            }
+
             document.getElementById('pass-input').value = '';
         }
     }
@@ -669,18 +705,18 @@
         container.style.transform = `translate(${x}px, ${y}px) scale(${yesScale})`;
     }
 
-    // --- SMART SERVICE WORKER & PURGE (v11) ---
+    // --- SMART SERVICE WORKER & PURGE (v12) ---
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(registrations => {
             for(let registration of registrations) {
-                if (registration.active && !registration.active.scriptURL.includes('v=11')) {
+                if (registration.active && !registration.active.scriptURL.includes('v=12')) {
                     registration.unregister();
                 }
             }
         });
 
         window.addEventListener('load', () => {
-            const swUrl = './sw.js?v=11'; 
+            const swUrl = './sw.js?v=12'; 
             navigator.serviceWorker.register(swUrl).then(reg => {
                 if (reg.waiting) { showUpdateBanner(); }
                 reg.addEventListener('updatefound', () => {
