@@ -60,6 +60,23 @@
             padding: 12px 30px; border-radius: 20px; font-weight: bold; cursor: pointer;
         }
 
+        /* NEW HINT BUTTON STYLE */
+        .hint-trigger {
+            margin-top: 25px; display: inline-flex; flex-direction: column; align-items: center; cursor: pointer;
+        }
+        .info-icon {
+            width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--primary);
+            color: var(--primary); font-weight: bold; font-family: serif; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s; position: relative;
+        }
+        .info-icon::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            border-radius: 50%; border: 2px solid var(--primary);
+            animation: pulse-ring 2s infinite; opacity: 0;
+        }
+        @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.6); opacity: 0; } }
+
         .main-container { 
             position: relative; width: 100%; height: 100%; 
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -332,9 +349,9 @@
         <button class="lock-btn" onclick="checkPass()">Unlock</button>
         <p id="lock-error" style="color: red; font-size: 11px; margin-top: 10px; display: none;">Wrong code! Try again. 🤫</p>
         
-        <div onclick="showHint()" style="margin-top: 25px; cursor: pointer; opacity: 0.6;">
-            <span style="font-size: 18px;">ℹ️</span>
-            <p id="hint-text" style="font-size: 11px; color: var(--primary); margin-top: 5px; display: none; font-style: italic;">
+        <div class="hint-trigger" onclick="showHint()">
+            <div class="info-icon">i</div>
+            <p id="hint-text" style="font-size: 11px; color: var(--primary); margin-top: 10px; display: none; font-style: italic;">
                 Hint: (DDMM)
             </p>
         </div>
@@ -652,18 +669,18 @@
         container.style.transform = `translate(${x}px, ${y}px) scale(${yesScale})`;
     }
 
-    // --- SMART SERVICE WORKER & PURGE (v10) ---
+    // --- SMART SERVICE WORKER & PURGE (v11) ---
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(registrations => {
             for(let registration of registrations) {
-                if (registration.active && !registration.active.scriptURL.includes('v=10')) {
+                if (registration.active && !registration.active.scriptURL.includes('v=11')) {
                     registration.unregister();
                 }
             }
         });
 
         window.addEventListener('load', () => {
-            const swUrl = './sw.js?v=10'; 
+            const swUrl = './sw.js?v=11'; 
             navigator.serviceWorker.register(swUrl).then(reg => {
                 if (reg.waiting) { showUpdateBanner(); }
                 reg.addEventListener('updatefound', () => {
