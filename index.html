@@ -693,7 +693,7 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             // Adds a timestamp to bypass GitHub/Browser local caching
-            const swUrl = './sw.js?v=' + Date.now();
+            const swUrl = './sw.js?v=8' + Date.now();
             
             navigator.serviceWorker.register(swUrl).then(reg => {
                 reg.addEventListener('updatefound', () => {
