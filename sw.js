@@ -1,4 +1,4 @@
-const cacheName = 'miku-bd-v4'; // Bumped to v4 to force the lock screen update
+const cacheName = 'miku-bd-v5'; 
 const assets = [
   './',
   './index.html',
@@ -11,17 +11,19 @@ const assets = [
   'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg'
 ];
 
-// Install Service Worker
+// 1. Install Event - Force the new Service Worker to activate immediately
 self.addEventListener('install', evt => {
   evt.waitUntil(
     caches.open(cacheName).then(cache => {
-      console.log('Caching all assets for v4');
+      console.log('Caching assets for v5');
       return cache.addAll(assets);
     })
   );
+  // This skips the "waiting" phase and activates the new SW as soon as it's finished installing
+  self.skipWaiting();
 });
 
-// Activate & Cleanup Old Caches (This is what clears v3)
+// 2. Activate Event - Clean up old caches and take control of the page
 self.addEventListener('activate', evt => {
   evt.waitUntil(
     caches.keys().then(keys => {
@@ -31,9 +33,11 @@ self.addEventListener('activate', evt => {
       );
     })
   );
+  // This allows the Service Worker to start controlling the page immediately without a manual refresh
+  return self.clients.claim();
 });
 
-// Fetching assets
+// 3. Fetch Event - Serve assets from cache
 self.addEventListener('fetch', evt => {
   evt.respondWith(
     caches.match(evt.request).then(cacheRes => {
