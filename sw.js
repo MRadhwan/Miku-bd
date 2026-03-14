@@ -1,4 +1,4 @@
-const cacheName = 'miku-bd-v5'; 
+const cacheName = 'miku-bd-v6'; 
 const assets = [
   './',
   './index.html',
