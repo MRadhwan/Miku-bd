@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miku-birthday-v8';
+const CACHE_NAME = 'miku-birthday-v9';
 const ASSETS = [
     './',
     './index.html',
@@ -8,38 +8,35 @@ const ASSETS = [
     './site.webmanifest',
     'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Golden%20Brown%20-%20The%20Stranglers.mp3',
     'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Young.jpg',
-    'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg',
-    'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/android-chrome-512x512.png'
+    'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg'
 ];
 
-// Install Event - Caching the new v7 assets
 self.addEventListener('install', (event) => {
-    self.skipWaiting(); // Forces the waiting service worker to become active immediately
+    self.skipWaiting();
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS);
-        })
+        caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
     );
 });
 
-// Activate Event - Cleaning up ALL old caches (v1-v6)
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
+        caches.keys().then((keys) => {
             return Promise.all(
-                cacheNames.map((cache) => {
-                    if (cache !== CACHE_NAME) {
-                        console.log('Service Worker: Clearing Old Cache', cache);
-                        return caches.delete(cache);
-                    }
-                })
+                keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
             );
-        }).then(() => self.clients.claim()) // Takes control of the page immediately
+        })
     );
+    return self.clients.claim();
 });
 
-// Fetch Event - Serving assets from cache
+// NETWORK-FIRST STRATEGY: Ensures updates show up immediately
 self.addEventListener('fetch', (event) => {
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).catch(() => caches.match(event.request))
+        );
+        return;
+    }
     event.respondWith(
         caches.match(event.request).then((response) => {
             return response || fetch(event.request);
