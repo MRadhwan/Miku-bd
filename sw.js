@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miku-birthday-v9';
+const CACHE_NAME = 'miku-birthday-v10';
 const ASSETS = [
     './',
     './index.html',
@@ -29,7 +29,6 @@ self.addEventListener('activate', (event) => {
     return self.clients.claim();
 });
 
-// NETWORK-FIRST STRATEGY: Ensures updates show up immediately
 self.addEventListener('fetch', (event) => {
     if (event.request.mode === 'navigate') {
         event.respondWith(
