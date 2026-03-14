@@ -1,29 +1,43 @@
-const cacheName = 'miku-bd-v1';
+const cacheName = 'miku-bd-v3'; // Increased to v3 to force update
 const assets = [
   './',
   './index.html',
+  './site.webmanifest',
+  './favicon-16x16.png',
+  './favicon-32x32.png',
+  './apple-touch-icon.png',
   'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Golden%20Brown%20-%20The%20Stranglers.mp3',
   'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Young.jpg',
-  'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg',
-  'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/android-chrome-512x512.png',
-  './favicon-32x32.png',
-  './favicon-16x16.png',
-  './apple-touch-icon.png',
-  './site.webmanifest'
+  'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg'
 ];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
+// Install Service Worker
+self.addEventListener('install', evt => {
+  evt.waitUntil(
     caches.open(cacheName).then(cache => {
+      console.log('Caching all assets');
       return cache.addAll(assets);
     })
   );
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
+// Activate & Cleanup Old Caches
+self.addEventListener('activate', evt => {
+  evt.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(keys
+        .filter(key => key !== cacheName)
+        .map(key => caches.delete(key))
+      );
+    })
+  );
+});
+
+// Fetching assets
+self.addEventListener('fetch', evt => {
+  evt.respondWith(
+    caches.match(evt.request).then(cacheRes => {
+      return cacheRes || fetch(evt.request);
     })
   );
 });
