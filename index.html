@@ -3,7 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Surprise for Miku</title>
+    <title>For Miku Madam ✨</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <meta name="title" content="A Birthday Surprise for Miku! ✨">
+    <meta name="description" content="Open your letter, Miku madam...">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="For Miku Madam ✨">
+    <meta property="og:description" content="A special birthday surprise just for you.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/android-chrome-512x512.png">
+
     <style>
         :root {
             --primary: #c2185b;
@@ -13,11 +26,17 @@
             --gold: #d4af37;
         }
 
+        /* Grandma Mode Filter */
+        .vintage-mode {
+            filter: grayscale(1) sepia(0.2);
+        }
+
         body {
             margin: 0; padding: 0; background: #fce4ec;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex; justify-content: center; align-items: center;
             height: 100vh; overflow: hidden;
+            transition: filter 0.8s ease;
         }
 
         .main-container { 
@@ -28,7 +47,19 @@
 
         .main-container.shifted { transform: translateY(160px); }
 
-        /* --- ENVELOPE --- */
+        /* --- CUSTOM NOTIFICATION POPUP --- */
+        #grandma-toast {
+            position: fixed; top: -150px; left: 50%; transform: translateX(-50%);
+            background: white; color: var(--primary); padding: 15px 25px;
+            border-radius: 20px; font-weight: bold; z-index: 10000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid var(--primary);
+            display: flex; align-items: center; gap: 12px;
+            width: 80%; max-width: 400px; font-size: 14px;
+        }
+        #grandma-toast.show { top: 20px; }
+
         .envelope-wrapper {
             position: relative; width: 300px; height: 200px;
             background: var(--envelope-bg); border-radius: 0 0 10px 10px;
@@ -59,7 +90,6 @@
             color: white; font-size: 11px; z-index: 1200; opacity: 0.9;
         }
 
-        /* --- LETTER --- */
         .letter {
             position: absolute; 
             top: 50%; left: 50%;
@@ -91,7 +121,6 @@
         }
         .egg-hint { font-size: 9px; color: #fce4ec; text-align: center; margin-top: 5px; opacity: 0.8; font-style: italic; }
 
-        /* --- ANIMATION STATES --- */
         .open .flap { transform: rotateX(180deg); z-index: 10; }
         .open .marked-text, .open .flap-heart { opacity: 0; }
         .open .letter { 
@@ -115,7 +144,17 @@
             padding: 2px 8px; border-radius: 10px; white-space: nowrap;
         }
 
-        /* --- CAKE EASTER EGG --- */
+        #custom-toast {
+            position: fixed; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%) scale(0);
+            background: var(--primary); color: white; 
+            padding: 25px 50px; border-radius: 30px; font-weight: bold; z-index: 9999;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 35px rgba(194, 24, 91, 0.4);
+            text-align: center; pointer-events: none; line-height: 1.5;
+        }
+        #custom-toast.show { transform: translate(-50%, -50%) scale(1); }
+
         #cake-box {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0);
@@ -132,7 +171,6 @@
             100% { transform: rotate(-45deg) translate(0, 0); opacity: 0; }
         }
 
-        /* PHOTO BUTTON CONTAINER */
         #photo-container {
             display: none; position: fixed; top: 60%; left: 50%; transform: translateX(-50%);
             z-index: 6000; text-align: center;
@@ -145,8 +183,6 @@
             animation: pulseBtn 2s infinite;
         }
         
-        #photo-share-btn:active { transform: scale(0.9); }
-
         .btn-hint {
             font-size: 10px; color: var(--primary); font-weight: bold;
             margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
@@ -159,7 +195,6 @@
             100% { box-shadow: 0 0 0 0 rgba(194, 24, 91, 0); }
         }
 
-        /* SECRET MODAL */
         #secret-modal {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
             background: white; padding: 30px; border-radius: 25px; width: 280px;
@@ -175,12 +210,8 @@
         }
         .signature { display: block; font-size: 14px; margin-top: 10px; color: #5d4037; font-weight: normal; }
 
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
+        @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        /* PRANK MENU */
         #interactive-menu {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
             background: white; padding: 25px; border-radius: 20px;
@@ -205,7 +236,18 @@
             margin-top: 40px; background: var(--primary); color: white;
             border: none; padding: 10px 25px; border-radius: 20px;
             font-weight: bold; cursor: pointer; z-index: 2000;
-            visibility: hidden; opacity: 0; transition: opacity 0.5s;
+            visibility: hidden; opacity: 0; transition: 0.5s;
+        }
+
+        #backBtn.ready-glow {
+            animation: glowButton 1.5s infinite;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        @keyframes glowButton {
+            0% { transform: scale(1); box-shadow: 0 0 5px var(--primary); }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px var(--primary); }
+            100% { transform: scale(1); box-shadow: 0 0 5px var(--primary); }
         }
 
         #musicToggle {
@@ -215,7 +257,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 4000; cursor: pointer;
         }
 
-        /* --- GIFT OVERLAY --- */
         #gift-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.92); z-index: 3000;
@@ -233,17 +274,17 @@
         .photo-box { width: 120px; height: 120px; border-radius: 8px; overflow: hidden; border: 2px solid white; }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
         .teddy-bear { font-size: 60px; display: inline-block; animation: floatBear 2s ease-in-out infinite; }
-        @keyframes floatBear {
-            0%, 100% { transform: translateY(0) rotate(-2deg); }
-            50% { transform: translateY(-12px) rotate(2deg); }
-        }
-
+        @keyframes floatBear { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
         .continue-hint { font-size: 11px; color: var(--primary); font-weight: bold; margin-top: 15px; animation: blink 1.5s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
         .sparkle-rain { position: fixed; top: -50px; font-size: 20px; pointer-events: none; z-index: 2500; animation: fullRain 4s linear forwards; }
         @keyframes fullRain { 0% { transform: translateY(-10vh); opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
-        .grandma-text { display: inline-block; color: #880e4f; font-weight: bold; animation: wiggle 0.5s infinite; }
+        
+        .grandma-text { 
+            display: inline-block; color: #880e4f; font-weight: bold; 
+            animation: wiggle 0.5s infinite; cursor: pointer;
+            text-decoration: underline dotted;
+        }
         @keyframes wiggle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
     </style>
 </head>
@@ -253,8 +294,15 @@
     <source src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Golden%20Brown%20-%20The%20Stranglers.mp3" type="audio/mpeg">
 </audio>
 
+<div id="grandma-toast">
+    <span id="toast-emoji">✨</span>
+    <span id="toast-text">Loading surprise...</span>
+</div>
+
 <div id="musicToggle" onclick="toggleMusic()">🎵</div>
 <div id="rain-layer" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2500;"></div>
+
+<div id="custom-toast">🍰 Slice! <br> <span style="font-size: 0.9rem; opacity: 0.9;">Happy Birthday, Miku!</span></div>
 
 <div class="main-container" id="mainWrapper">
     <div class="envelope-wrapper" id="envelope" onclick="handleEnvelopeClick()">
@@ -274,7 +322,7 @@
                 <h2>Dearest Miku Madam,</h2>
                 <p>Today is ur day my miku madam..Mar 24th 2009 The day u were cherished into earth to be the laughter and the future of ur family...</p>
                 <p>And this year I wish u have wonderfully experiences which u couldn't experience last year..so I hope u get the chance to experience them this year..I also wish best of luck on ur 12th..but today is nothing but focus on ur birthday..</p>
-                <p>ur the sweetest,kindest and pretty lady...now ur aging to a <span class="grandma-text">grandma</span> but that dosent matter grandma's are also a charm so ur a bright star..hope all ur hardwork turns to reality in these coming days..</p>
+                <p>ur the sweetest,kindest and pretty lady...now ur aging to a <span class="grandma-text" onclick="toggleGrandmaMode(event)">grandma</span> but that dosent matter grandma's are also a charm so ur a bright star..hope all ur hardwork turns to reality in these coming days..</p>
                 <p>if anything bothers u just keep getting through it like evry year..this is ur day and the upcoming year is the test..so stay strong and enjoy the few years of childhoodness before it vanishes into the reality and responsibilities take over..so cherish evrey moment of this year and keep cherishing until ur an old granny..</p>
                 <p>17 now..17 years of experiencing the moments of life with everyone..keep it up..life is only lived once so live to the fullest cause once you grow even older u might or can experience those experiences again so dont miss any opportunity trust urself and take the decisions and prove u were right keep being awesome evry year and get more pretty than pretty in these coming years..</p>
                 <p>so nothing else I wish u a very happy birthday..enjoy the day and forget about every other stress just relax and enjoy ur day cause who knows who all will be there the next year so enjoy with everyone make everyone happy as they looked after u and made u happy..</p>
@@ -307,14 +355,14 @@
     <div id="ask-content">
         <p class="secret-title">So... is Miku Madam going to share a photo? ✨</p>
         <div class="menu-btns" style="min-height: auto;">
-            <button class="m-btn btn-yes" onclick="revealWaitingMsg()">Yes!</button>
-            <button class="m-btn btn-no" onclick="closeSecretModal()">No</button>
+            <button class="m-btn btn-yes" onclick="revealWaitingMsg(true)">Yes!</button>
+            <button class="m-btn btn-no" onclick="revealWaitingMsg(false)">No</button>
         </div>
     </div>
     <div id="msg-content" class="secret-msg">
-        "Thank uu, i will waittt..."
+        <span id="secret-text">"Thank uu, i will waittt..."</span>
         <span class="signature">- Radhwan</span>
-        <div style="margin-top:15px; font-size: 25px;">⏳💖</div>
+        <div id="secret-emoji" style="margin-top:15px; font-size: 25px;">⏳💖</div>
     </div>
 </div>
 
@@ -355,6 +403,7 @@
 <script>
     let currentStep = 1; let giftSubStep = 1; let chocolateClicks = 0;
     let rainInterval; let isPrankActive = false;
+    let yesScale = 1; let isGrandmaMode = false;
     const music = document.getElementById('bgMusic');
 
     function handleEnvelopeClick() {
@@ -371,6 +420,27 @@
 
     function toggleMusic() { music.paused ? music.play() : music.pause(); }
 
+    function toggleGrandmaMode(e) {
+        e.stopPropagation();
+        isGrandmaMode = !isGrandmaMode;
+        showToast(isGrandmaMode ? "Grandma Mode: Activated" : "Grandma Mode: Deactivated", isGrandmaMode ? "👵" : "✨", 2500);
+        if (isGrandmaMode) document.body.classList.add('vintage-mode');
+        else document.body.classList.remove('vintage-mode');
+    }
+
+    function revealSecret(e) { 
+        e.stopPropagation(); 
+        showToast("Wait, you actually found the hidden heart?!..Neee pwoliiii anneeee mwolleee...Happy Birthday again, Miku Madam!", "💖", 5000);
+    }
+
+    function showToast(message, emoji, duration) {
+        const toast = document.getElementById('grandma-toast');
+        document.getElementById('toast-text').innerHTML = message;
+        document.getElementById('toast-emoji').innerHTML = emoji;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
     function handlePhotoOption() {
         const modal = document.getElementById('secret-modal');
         document.getElementById('ask-content').style.display = 'block';
@@ -379,16 +449,31 @@
         setTimeout(() => modal.classList.add('show'), 10);
     }
 
-    function revealWaitingMsg() {
+    function revealWaitingMsg(isYes) {
+        const text = document.getElementById('secret-text');
+        const emoji = document.getElementById('secret-emoji');
+        if(isYes) { text.innerHTML = '"Thank uu, i will waittt..."'; emoji.innerHTML = '⏳💖'; } 
+        else { text.innerHTML = '"OKAY!!"'; emoji.innerHTML = '👍✨'; }
         document.getElementById('ask-content').style.display = 'none';
         document.getElementById('msg-content').style.display = 'block';
-        setTimeout(closeSecretModal, 4000);
-    }
-
-    function closeSecretModal() {
-        const modal = document.getElementById('secret-modal');
-        modal.classList.remove('show');
-        setTimeout(() => { modal.style.display = 'none'; }, 400);
+        setTimeout(() => {
+            const modal = document.getElementById('secret-modal');
+            modal.classList.remove('show');
+            document.getElementById('photo-container').style.display = 'none';
+            const letter = document.getElementById('letter');
+            letter.style.transform = "translate(-50%, -50%) scale(0.1)";
+            letter.style.opacity = "0";
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.getElementById('envelope').classList.remove('open');
+                document.getElementById('mainWrapper').classList.remove('shifted');
+                setTimeout(() => {
+                    currentStep = 1; giftSubStep = 1; chocolateClicks = 0; isPrankActive = false;
+                    letter.style.transform = ""; 
+                    document.getElementById('backBtn').classList.add('ready-glow');
+                }, 1000);
+            }, 800);
+        }, 3000);
     }
 
     function handleChocolateClick() {
@@ -400,9 +485,13 @@
             setTimeout(() => {
                 document.getElementById('cakeEmoji').classList.add('cutting');
                 setTimeout(() => {
-                    alert("🍰 Slice! Happy Birthday, Miku!");
-                    cakeBox.classList.remove('show');
-                    document.getElementById('photo-container').style.display = 'block';
+                    const toast = document.getElementById('custom-toast');
+                    toast.classList.add('show');
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                        cakeBox.classList.remove('show');
+                        document.getElementById('photo-container').style.display = 'block';
+                    }, 2500);
                 }, 1200);
             }, 500);
         }
@@ -412,7 +501,6 @@
         e.stopPropagation();
         const overlay = document.getElementById('gift-overlay');
         overlay.style.display = 'flex';
-        
         rainInterval = setInterval(() => {
             const layer = document.getElementById('rain-layer');
             const s = document.createElement('div');
@@ -422,18 +510,13 @@
             layer.appendChild(s);
             setTimeout(() => s.remove(), 4000);
         }, 150);
-
-        setTimeout(() => {
-            overlay.style.opacity = '1';
-            document.getElementById('mainPhotoCard').style.transform = 'scale(1)';
-        }, 50);
+        setTimeout(() => { overlay.style.opacity = '1'; document.getElementById('mainPhotoCard').style.transform = 'scale(1)'; }, 50);
     }
 
     function handleGiftAreaClick() {
         const card = document.getElementById('mainPhotoCard');
         card.classList.add('flash-active');
         setTimeout(() => card.classList.remove('flash-active'), 200);
-        
         if (giftSubStep === 1) {
             document.getElementById('teddyArea').style.display = 'none';
             document.getElementById('photoArea').style.display = 'block';
@@ -476,7 +559,8 @@
                 isPrankActive = false; 
                 document.getElementById('menu-text').innerHTML = "Did you like the surprise?";
                 document.getElementById('no-btn').innerHTML = "No";
-                document.getElementById('yes-container').style.transform = "translate(0,0)";
+                document.getElementById('yes-container').style.transform = "translate(0,0) scale(1)";
+                yesScale = 1;
                 puppy.style.display = 'none';
             }
         }
@@ -484,11 +568,11 @@
 
     function moveYes() {
         const container = document.getElementById('yes-container');
-        const x = Math.random() * 100 - 50; const y = Math.random() * 60 - 30;
-        container.style.transform = `translate(${x}px, ${y}px)`;
+        const x = Math.random() * 100 - 50; 
+        const y = Math.random() * 60 - 30;
+        if (yesScale > 0.3) { yesScale -= 0.15; }
+        container.style.transform = `translate(${x}px, ${y}px) scale(${yesScale})`;
     }
-
-    function revealSecret(e) { e.stopPropagation(); alert("Wait, you actually found the hidden heart?!..Neee pwoliiii anneeee mwolleee...Happy Birthday again, Miku Madam!"); }
 </script>
 </body>
 </html>
