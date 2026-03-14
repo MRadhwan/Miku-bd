@@ -61,14 +61,26 @@
             transition: transform 0.2s;
         }
 
-        .shake-error { animation: shake 0.4s ease-in-out; color: #d32f2f !important; font-weight: bold; }
+        /* NEW ERROR BOX STYLING */
+        #error-container {
+            display: none;
+            background: #fff0f5;
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 15px;
+            min-height: 20px;
+        }
+        #lock-error { font-size: 13px; margin: 0; color: var(--primary); }
+
+        .shake-error { animation: shake 0.4s ease-in-out; }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-8px); }
             75% { transform: translateX(8px); }
         }
 
-        /* --- NEW CREATIVE HINT TRIGGER --- */
+        /* --- HINT TRIGGER --- */
         .hint-trigger {
             margin-top: 25px; display: inline-flex; flex-direction: column; align-items: center; cursor: pointer;
         }
@@ -105,7 +117,7 @@
         }
         @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
 
-        /* --- YOUR ORIGINAL STYLES REMAINED BELOW --- */
+        /* ALL ORIGINAL STYLES UNTOUCHED */
         .main-container { 
             position: relative; width: 100%; height: 100%; 
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -351,7 +363,6 @@
         }
         @keyframes wiggle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 
-        /* UPDATE BANNER */
         #update-banner {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: var(--primary); color: white; padding: 12px 25px;
@@ -376,11 +387,13 @@
         
         <input type="password" id="pass-input" placeholder="Enter Secret Code">
         <button class="lock-btn" id="unlock-btn" onclick="checkPass()">Unlock</button>
-        <p id="lock-error" style="font-size: 12px; margin-top: 10px; display: none;">Wrong code! Try again. 🤫</p>
+        
+        <div id="error-container">
+            <p id="lock-error">Wrong code! Try again. 🤫</p>
+        </div>
         
         <div class="hint-trigger">
             <div class="info-icon" id="info-btn" onclick="revealMystery()">i</div>
-            
             <div id="mystery-container">
                 <div id="creative-box" onclick="tapBox()">
                     🎁
@@ -506,7 +519,7 @@
     let currentStep = 1; let giftSubStep = 1; let chocolateClicks = 0;
     let rainInterval; let isPrankActive = false;
     let yesScale = 1; let isGrandmaMode = false;
-    let errorCount = 0; let boxTaps = 0; // New tap counter for hint
+    let errorCount = 0; let boxTaps = 0;
     const music = document.getElementById('bgMusic');
 
     const prankMessages = [
@@ -519,7 +532,6 @@
         "Almost... but not quite! 🤭"
     ];
 
-    // --- NEW HINT FUNCTIONS ---
     function revealMystery() {
         document.getElementById('info-btn').style.display = 'none';
         document.getElementById('mystery-container').style.display = 'flex';
@@ -529,17 +541,11 @@
         boxTaps++;
         const box = document.getElementById('creative-box');
         const countText = document.getElementById('tap-count');
-        
-        // Shake feedback
         box.classList.remove('shake-error');
         void box.offsetWidth;
         box.classList.add('shake-error');
-        
-        // Scale feedback
         box.style.transform = `scale(${1 + (boxTaps * 0.15)}) rotate(${boxTaps * 3}deg)`;
-        
         if (navigator.vibrate) navigator.vibrate(50);
-        
         if (boxTaps < 4) {
             countText.innerHTML = (4 - boxTaps) + " more taps!";
         } else {
@@ -551,6 +557,7 @@
     function checkPass() {
         const input = document.getElementById('pass-input').value;
         const error = document.getElementById('lock-error');
+        const errorContainer = document.getElementById('error-container');
         const unlockBtn = document.getElementById('unlock-btn');
 
         if(input === '2403') {
@@ -563,10 +570,11 @@
             if (navigator.vibrate) { navigator.vibrate([50, 50, 50]); }
             
             error.innerHTML = prankMessages[errorCount % prankMessages.length];
-            error.style.display = 'block';
-            error.classList.remove('shake-error');
-            void error.offsetWidth;
-            error.classList.add('shake-error');
+            errorContainer.style.display = 'block'; // Show the box
+            
+            errorContainer.classList.remove('shake-error');
+            void errorContainer.offsetWidth;
+            errorContainer.classList.add('shake-error');
             
             if (errorCount >= 3) {
                 const x = Math.random() * 40 - 20;
@@ -578,7 +586,7 @@
         }
     }
 
-    // --- YOUR ORIGINAL FUNCTIONS BELOW ---
+    // ALL OTHER FUNCTIONS UNCHANGED
     function handleEnvelopeClick() {
         if (currentStep === 1) {
             music.play().catch(e => console.log("Audio blocked"));
@@ -754,10 +762,9 @@
         container.style.transform = `translate(${x}px, ${y}px) scale(${yesScale})`;
     }
 
-    // --- SERVICE WORKER v13 ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            const swUrl = './sw.js?v=13'; 
+            const swUrl = './sw.js?v=14'; 
             navigator.serviceWorker.register(swUrl);
         });
     }
