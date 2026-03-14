@@ -26,10 +26,7 @@
             --gold: #d4af37;
         }
 
-        /* Grandma Mode Filter */
-        .vintage-mode {
-            filter: grayscale(1) sepia(0.2);
-        }
+        .vintage-mode { filter: grayscale(1) sepia(0.2); }
 
         body {
             margin: 0; padding: 0; background: #fce4ec;
@@ -51,24 +48,6 @@
             box-shadow: 0 10px 30px rgba(194, 24, 91, 0.2); text-align: center;
             width: 80%; max-width: 320px; border: 2px solid var(--primary);
         }
-        
-        #countdown-container {
-            margin-top: 15px;
-            padding: 10px;
-            background: #fff0f5;
-            border-radius: 15px;
-            animation: pulseFade 2s infinite;
-        }
-        #days-left {
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 1.2rem;
-            display: block;
-        }
-        @keyframes pulseFade {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(0.98); }
-        }
 
         #pass-input {
             width: 100%; padding: 12px; margin: 20px 0; border-radius: 12px;
@@ -86,7 +65,6 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .main-container.shifted { transform: translateY(160px); }
 
         #grandma-toast {
@@ -118,7 +96,6 @@
         .flap-heart {
             position: absolute; top: 90px; width: 100%; text-align: center;
             color: #c2185b; font-size: 32px; z-index: 1600; pointer-events: none;
-            transition: opacity 0.3s;
         }
 
         .marked-text {
@@ -280,10 +257,15 @@
             font-weight: bold; cursor: pointer; z-index: 2000;
             visibility: hidden; opacity: 0; transition: 0.5s;
         }
-
         #backBtn.ready-glow {
             animation: glowButton 1.5s infinite;
             box-shadow: 0 0 20px var(--primary);
+        }
+
+        @keyframes glowButton {
+            0% { transform: scale(1); box-shadow: 0 0 5px var(--primary); }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px var(--primary); }
+            100% { transform: scale(1); box-shadow: 0 0 5px var(--primary); }
         }
 
         #musicToggle {
@@ -310,16 +292,20 @@
         .photo-box { width: 120px; height: 120px; border-radius: 8px; overflow: hidden; border: 2px solid white; }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; }
         .teddy-bear { font-size: 60px; display: inline-block; animation: floatBear 2s ease-in-out infinite; }
+        @keyframes floatBear { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
         .continue-hint { font-size: 11px; color: var(--primary); font-weight: bold; margin-top: 15px; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .sparkle-rain { position: fixed; top: -50px; font-size: 20px; pointer-events: none; z-index: 2500; animation: fullRain 4s linear forwards; }
+        @keyframes fullRain { 0% { transform: translateY(-10vh); opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
         
         .grandma-text { 
             display: inline-block; color: #880e4f; font-weight: bold; 
             animation: wiggle 0.5s infinite; cursor: pointer;
             text-decoration: underline dotted;
         }
+        @keyframes wiggle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 
-        /* NEW UPDATE BANNER CSS */
+        /* UPDATE BANNER */
         #update-banner {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: var(--primary); color: white; padding: 12px 25px;
@@ -334,7 +320,7 @@
 <body>
 
 <div id="update-banner" onclick="window.location.reload()">
-    ✨ New Surprise Ready! <span>Tap to Update</span>
+    ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
 
 <div id="lock-screen">
@@ -342,10 +328,6 @@
         <h3 style="color: var(--primary); margin: 0;">Verification Required</h3>
         <p style="font-size: 12px; color: #888;">Only Miku Madam can enter... ✨</p>
         
-        <div id="countdown-container">
-            <span id="days-left">Calculating...</span>
-        </div>
-
         <input type="password" id="pass-input" placeholder="Enter Secret Code">
         <button class="lock-btn" onclick="checkPass()">Unlock</button>
         <p id="lock-error" style="color: red; font-size: 11px; margin-top: 10px; display: none;">Wrong code! Try again. 🤫</p>
@@ -474,24 +456,6 @@
     let rainInterval; let isPrankActive = false;
     let yesScale = 1; let isGrandmaMode = false;
     const music = document.getElementById('bgMusic');
-
-    function updateCountdown() {
-        const birthday = new Date('March 24, 2026 00:00:00').getTime();
-        const now = new Date().getTime();
-        const gap = birthday - now;
-        const day = 1000 * 60 * 60 * 24;
-        const d = Math.ceil(gap / day);
-        const countdownElement = document.getElementById('days-left');
-        
-        if (d > 0) {
-            countdownElement.innerText = d + " Days to go... ⏳";
-        } else if (d === 0) {
-            countdownElement.innerText = "IT'S FINALLY TODAY! 🎂✨";
-        } else {
-            countdownElement.innerText = "Happy Birthday Miku! 🥳";
-        }
-    }
-    updateCountdown();
 
     function checkPass() {
         const input = document.getElementById('pass-input').value;
@@ -688,19 +652,18 @@
         container.style.transform = `translate(${x}px, ${y}px) scale(${yesScale})`;
     }
 
-    // --- SMART SERVICE WORKER & PURGE (v9) ---
+    // --- SMART SERVICE WORKER & PURGE (v10) ---
     if ('serviceWorker' in navigator) {
-        // Kill anything that isn't v9
         navigator.serviceWorker.getRegistrations().then(registrations => {
             for(let registration of registrations) {
-                if (registration.active && !registration.active.scriptURL.includes('v=9')) {
+                if (registration.active && !registration.active.scriptURL.includes('v=10')) {
                     registration.unregister();
                 }
             }
         });
 
         window.addEventListener('load', () => {
-            const swUrl = './sw.js?v=9'; 
+            const swUrl = './sw.js?v=10'; 
             navigator.serviceWorker.register(swUrl).then(reg => {
                 if (reg.waiting) { showUpdateBanner(); }
                 reg.addEventListener('updatefound', () => {
