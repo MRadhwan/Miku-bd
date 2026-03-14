@@ -1,4 +1,4 @@
-const cacheName = 'miku-bd-v3'; // Increased to v3 to force update
+const cacheName = 'miku-bd-v4'; // Bumped to v4 to force the lock screen update
 const assets = [
   './',
   './index.html',
@@ -15,13 +15,13 @@ const assets = [
 self.addEventListener('install', evt => {
   evt.waitUntil(
     caches.open(cacheName).then(cache => {
-      console.log('Caching all assets');
+      console.log('Caching all assets for v4');
       return cache.addAll(assets);
     })
   );
 });
 
-// Activate & Cleanup Old Caches
+// Activate & Cleanup Old Caches (This is what clears v3)
 self.addEventListener('activate', evt => {
   evt.waitUntil(
     caches.keys().then(keys => {
