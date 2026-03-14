@@ -159,8 +159,9 @@
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0);
             z-index: 5000; transition: 0.5s; text-align: center; pointer-events: none;
+            visibility: hidden; /* Added to ensure it doesn't block clicks when hidden */
         }
-        #cake-box.show { transform: translate(-50%, -50%) scale(2.5); }
+        #cake-box.show { transform: translate(-50%, -50%) scale(2.5); visibility: visible; }
         .cake-emoji { font-size: 60px; position: relative; display: inline-block; }
         .knife { position: absolute; top: -10px; right: -10px; font-size: 30px; transform: rotate(-45deg); opacity: 0; }
         .cutting .knife { animation: cutAction 1s forwards; opacity: 1; }
@@ -493,10 +494,10 @@
                 document.getElementById('cakeEmoji').classList.add('cutting');
                 setTimeout(() => {
                     const toast = document.getElementById('custom-toast');
+                    cakeBox.classList.remove('show'); // Hide cake immediately when toast starts
                     toast.classList.add('show');
                     setTimeout(() => {
                         toast.classList.remove('show');
-                        cakeBox.classList.remove('show');
                         document.getElementById('photo-container').style.display = 'block';
                     }, 2500);
                 }, 1200);
