@@ -426,12 +426,10 @@
         showToast(isGrandmaMode ? "Grandma Mode: Activated" : "Grandma Mode: Deactivated", isGrandmaMode ? "👵" : "✨", 2500);
         if (isGrandmaMode) {
             document.body.classList.add('vintage-mode');
-            // Music shift for Grandma Mode
-            music.playbackRate = 0.85; // Slowed effect
-            music.volume = 0.5;        // Muffled volume
+            music.playbackRate = 0.85; 
+            music.volume = 0.5;        
         } else {
             document.body.classList.remove('vintage-mode');
-            // Reset to normal
             music.playbackRate = 1.0;
             music.volume = 1.0;
         }
@@ -581,6 +579,15 @@
         const y = Math.random() * 60 - 30;
         if (yesScale > 0.3) { yesScale -= 0.15; }
         container.style.transform = `translate(${x}px, ${y}px) scale(${yesScale})`;
+    }
+
+    // --- SERVICE WORKER REGISTRATION (OPTION 3) ---
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker Registered!'))
+                .catch(err => console.log('Registration Failed:', err));
+        });
     }
 </script>
 </body>
