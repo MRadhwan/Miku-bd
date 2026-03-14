@@ -51,6 +51,26 @@
             box-shadow: 0 10px 30px rgba(194, 24, 91, 0.2); text-align: center;
             width: 80%; max-width: 320px; border: 2px solid var(--primary);
         }
+        
+        /* NEW COUNTDOWN STYLING */
+        #countdown-container {
+            margin-top: 15px;
+            padding: 10px;
+            background: #fff0f5;
+            border-radius: 15px;
+            animation: pulseFade 2s infinite;
+        }
+        #days-left {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: block;
+        }
+        @keyframes pulseFade {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.98); }
+        }
+
         #pass-input {
             width: 100%; padding: 12px; margin: 20px 0; border-radius: 12px;
             border: 1.5px solid #ddd; outline: none; text-align: center;
@@ -317,7 +337,12 @@
 <div id="lock-screen">
     <div class="lock-box">
         <h3 style="color: var(--primary); margin: 0;">Verification Required</h3>
-        <p style="font-size: 12px; color: #888;">Only Miku Madam can enter.... ✨</p>
+        <p style="font-size: 12px; color: #888;">Only Miku Madam can enter... ✨</p>
+        
+        <div id="countdown-container">
+            <span id="days-left">Calculating...</span>
+        </div>
+
         <input type="password" id="pass-input" placeholder="Enter Secret Code">
         <button class="lock-btn" onclick="checkPass()">Unlock</button>
         <p id="lock-error" style="color: red; font-size: 11px; margin-top: 10px; display: none;">Wrong code! Try again. 🤫</p>
@@ -446,6 +471,27 @@
     let rainInterval; let isPrankActive = false;
     let yesScale = 1; let isGrandmaMode = false;
     const music = document.getElementById('bgMusic');
+
+    // --- COUNTDOWN LOGIC ---
+    function updateCountdown() {
+        const birthday = new Date('March 24, 2026 00:00:00').getTime();
+        const now = new Date().getTime();
+        const gap = birthday - now;
+
+        const day = 1000 * 60 * 60 * 24;
+        const d = Math.ceil(gap / day);
+
+        const countdownElement = document.getElementById('days-left');
+        
+        if (d > 0) {
+            countdownElement.innerText = `${d} Days to go... ⏳`;
+        } else if (d === 0) {
+            countdownElement.innerText = "IT'S FINALLY TODAY! 🎂✨";
+        } else {
+            countdownElement.innerText = "Happy Birthday Miku! 🥳";
+        }
+    }
+    updateCountdown();
 
     // --- LOCK SCREEN LOGIC ---
     function checkPass() {
@@ -643,10 +689,13 @@
         container.style.transform = `translate(${x}px, ${y}px) scale(${yesScale})`;
     }
 
-    // --- UPDATED AUTO-UPDATE SERVICE WORKER REGISTRATION ---
+    // --- AGGRESSIVE AUTO-UPDATE SERVICE WORKER REGISTRATION ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then(reg => {
+            // Adds a timestamp to bypass GitHub/Browser local caching
+            const swUrl = './sw.js?v=' + Date.now();
+            
+            navigator.serviceWorker.register(swUrl).then(reg => {
                 reg.addEventListener('updatefound', () => {
                     const newWorker = reg.installing;
                     newWorker.addEventListener('statechange', () => {
