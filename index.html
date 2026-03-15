@@ -475,7 +475,7 @@
     ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
 
-<div class="ver-tag">v80.0.0</div>
+<div class="ver-tag">v45.0.0</div>
 
 <div id="lock-screen">
     <div class="lock-box">
@@ -628,12 +628,14 @@
 
     function toggleFeatureModal() { document.getElementById('feature-modal').classList.toggle('show'); }
 
-    /* --- SERVICE WORKER LOGIC --- */
+    /* --- IMPROVED SERVICE WORKER LOGIC --- */
     let newWorker;
     let refreshing = false;
 
+    // This function is called when Miku taps the banner
     function handleUpdate() {
         if (newWorker) {
+            // This sends the kill signal to the old version
             newWorker.postMessage('skipWaiting');
         } else {
             window.location.reload();
@@ -641,21 +643,25 @@
     }
 
     if ('serviceWorker' in navigator) {
+        // This is the CRITICAL part: it waits until the new worker is active
         navigator.serviceWorker.addEventListener('controllerchange', () => {
             if (refreshing) return;
             refreshing = true;
-            window.location.reload();
+            window.location.reload(); // Now it will reload with the NEW content
         });
 
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js').then(reg => {
+                // Check if there is already an update waiting in the background
                 if (reg.waiting) {
                     newWorker = reg.waiting;
                     document.getElementById('update-banner').style.display = 'flex';
                 }
+
                 reg.addEventListener('updatefound', () => {
                     newWorker = reg.installing;
                     newWorker.addEventListener('statechange', () => {
+                        // Only show the banner once the new files are fully downloaded (installed)
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                             document.getElementById('update-banner').style.display = 'flex';
                         }
