@@ -36,6 +36,73 @@
             transition: filter 0.8s ease;
         }
 
+        /* --- FEATURE: BOOK ICON & MODAL STYLING --- */
+        #feature-icon {
+            position: fixed; top: 20px; left: 20px;
+            background: white; border-radius: 50%; width: 40px; height: 40px;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 5000; cursor: pointer;
+            font-size: 20px; border: 2.5px solid var(--primary);
+            transition: transform 0.3s;
+            animation: bookBreathe 2.5s infinite ease-in-out;
+        }
+
+        @keyframes bookBreathe {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.15) rotate(5deg); }
+        }
+
+        #feature-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 10000;
+            justify-content: center; align-items: center; opacity: 0; transition: 0.3s;
+        }
+        #feature-modal.show { display: flex; opacity: 1; }
+        
+        .patch-notes-card {
+            background: #fff; border-radius: 20px; padding: 25px;
+            width: 85%; max-width: 340px; border: 3px solid var(--primary);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); position: relative;
+            max-height: 80vh; overflow-y: auto;
+        }
+        .patch-notes-card h4 { margin: 0 0 15px 0; color: var(--primary); text-transform: uppercase; text-align: center; font-weight: 900; letter-spacing: 1px;}
+        
+        /* --- STYLIZED LIST ITEMS --- */
+        .patch-notes-card ul { margin: 0; padding: 0; list-style: none; }
+        .patch-notes-card li { 
+            margin-bottom: 10px; 
+            padding: 12px; 
+            border-radius: 12px; 
+            font-size: 12px; 
+            line-height: 1.4;
+            color: #444;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
+
+        /* Unique Pastel Colors for each list item */
+        .patch-notes-card li:nth-child(1) { background: #ffebee; border-left: 5px solid #ff1744; }
+        .patch-notes-card li:nth-child(2) { background: #e3f2fd; border-left: 5px solid #2196f3; }
+        .patch-notes-card li:nth-child(3) { background: #f1f8e9; border-left: 5px solid #7cb342; }
+        .patch-notes-card li:nth-child(4) { background: #fffde7; border-left: 5px solid #fbc02d; }
+        .patch-notes-card li:nth-child(5) { background: #f3e5f5; border-left: 5px solid #9c27b0; }
+        .patch-notes-card li:nth-child(6) { background: #e0f2f1; border-left: 5px solid #009688; }
+        .patch-notes-card li:nth-child(7) { background: #fff3e0; border-left: 5px solid #ff9800; }
+        .patch-notes-card li:nth-child(8) { background: #ede7f6; border-left: 5px solid #673ab7; }
+        .patch-notes-card li:nth-child(9) { background: #f9fbe7; border-left: 5px solid #afb42b; }
+        .patch-notes-card li:nth-child(10) { background: #eceff1; border-left: 5px solid #607d8b; }
+        .patch-notes-card li:nth-child(11) { background: #ffe0b2; border-left: 5px solid #e65100; }
+        .patch-notes-card li:nth-child(12) { background: #d1c4e9; border-left: 5px solid #512da8; }
+        .patch-notes-card li:nth-child(13) { background: #b2dfdb; border-left: 5px solid #00695c; }
+        
+        .close-patch {
+            position: absolute; top: 10px; right: 15px; font-size: 20px;
+            color: var(--primary); font-weight: bold; cursor: pointer; z-index: 10;
+        }
+
         /* --- LOCK SCREEN STYLING --- */
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -62,13 +129,8 @@
         }
 
         #error-container {
-            display: none;
-            background: #fff0f5;
-            border: 1px solid var(--primary);
-            border-radius: 12px;
-            padding: 10px;
-            margin-top: 15px;
-            min-height: 20px;
+            display: none; background: #fff0f5; border: 1px solid var(--primary);
+            border-radius: 12px; padding: 10px; margin-top: 15px; min-height: 20px;
         }
         #lock-error { font-size: 13px; margin: 0; color: var(--primary); }
 
@@ -79,9 +141,7 @@
             75% { transform: translateX(8px); }
         }
 
-        .hint-trigger {
-            margin-top: 25px; display: inline-flex; flex-direction: column; align-items: center; cursor: pointer;
-        }
+        .hint-trigger { margin-top: 25px; display: inline-flex; flex-direction: column; align-items: center; cursor: pointer; }
         .info-icon {
             width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--primary);
             color: var(--primary); font-weight: bold; font-family: serif; font-size: 14px;
@@ -94,9 +154,7 @@
             50% { box-shadow: 0 0 15px var(--primary); transform: scale(1.1); }
         }
 
-        #mystery-container {
-            display: none; flex-direction: column; align-items: center; margin-top: 15px;
-        }
+        #mystery-container { display: none; flex-direction: column; align-items: center; margin-top: 15px; }
         #creative-box {
             font-size: 35px; cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: boxFloat 3s infinite ease-in-out; position: relative;
@@ -164,8 +222,7 @@
         }
 
         .letter {
-            position: absolute; 
-            top: 50%; left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 280px; height: 180px; background: var(--paper);
             padding: 25px 20px; box-sizing: border-box; z-index: 2000; 
@@ -189,18 +246,13 @@
         .heart-logo-egg {
             display: block; margin: 20px auto 0 auto;
             font-size: 14px; color: #fce4ec; cursor: pointer;
-            user-select: none; transition: color 0.3s;
-            text-align: center;
+            user-select: none; transition: color 0.3s; text-align: center;
         }
         .egg-hint { font-size: 9px; color: #fce4ec; text-align: center; margin-top: 5px; opacity: 0.8; font-style: italic; }
 
         .open .flap { transform: rotateX(180deg); z-index: 10; }
         .open .marked-text, .open .flap-heart { opacity: 0; }
-        .open .letter { 
-            opacity: 1; 
-            transform: translate(-50%, -115%);
-            height: 420px; 
-        }
+        .open .letter { opacity: 1; transform: translate(-50%, -115%); height: 420px; }
 
         .pop-element {
             position: absolute; bottom: 20%; left: 50%;
@@ -229,10 +281,8 @@
         #custom-toast.show { transform: translate(-50%, -50%) scale(1); }
 
         #cake-box {
-            position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            z-index: 5000; transition: 0.5s; text-align: center; pointer-events: none;
-            visibility: hidden; 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            z-index: 5000; transition: 0.5s; text-align: center; pointer-events: none; visibility: hidden; 
         }
         #cake-box.show { transform: translate(-50%, -50%) scale(2.5); visibility: visible; }
         .cake-emoji { font-size: 60px; position: relative; display: inline-block; }
@@ -245,11 +295,7 @@
             100% { transform: rotate(-45deg) translate(0, 0); opacity: 0; }
         }
 
-        #photo-container {
-            display: none; position: fixed; top: 60%; left: 50%; transform: translateX(-50%);
-            z-index: 6000; text-align: center;
-        }
-        
+        #photo-container { display: none; position: fixed; top: 60%; left: 50%; transform: translateX(-50%); z-index: 6000; text-align: center; }
         #photo-share-btn {
             background: var(--primary); color: white; border: none; padding: 15px 25px;
             border-radius: 50px; font-weight: bold; cursor: pointer;
@@ -259,8 +305,7 @@
         
         .btn-hint {
             font-size: 10px; color: var(--primary); font-weight: bold;
-            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
-            animation: blink 1s infinite;
+            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; animation: blink 1s infinite;
         }
 
         @keyframes pulseBtn {
@@ -355,35 +400,53 @@
         
         .grandma-text { 
             display: inline-block; color: #880e4f; font-weight: bold; 
-            animation: wiggle 0.5s infinite; cursor: pointer;
-            text-decoration: underline dotted;
+            animation: wiggle 0.5s infinite; cursor: pointer; text-decoration: underline dotted;
         }
         @keyframes wiggle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 
-        /* --- UPDATE BANNER --- */
         #update-banner {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: var(--primary); color: white; padding: 12px 25px;
             border-radius: 50px; font-weight: bold; z-index: 30000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            display: none; align-items: center; gap: 10px; cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); display: none; align-items: center; gap: 10px; cursor: pointer;
             border: 2px solid white; animation: slideUp 0.5s ease-out;
         }
         @keyframes slideUp { from { bottom: -80px; } to { bottom: 20px; } }
 
-        .ver-tag {
-            position: fixed; bottom: 5px; right: 8px; font-size: 8px; 
-            color: var(--primary); opacity: 0.4; z-index: 10000;
-        }
+        .ver-tag { position: fixed; bottom: 5px; right: 8px; font-size: 8px; color: var(--primary); opacity: 0.4; z-index: 10000; }
     </style>
 </head>
 <body>
+
+<div id="feature-icon" onclick="toggleFeatureModal()">📖</div>
+
+<div id="feature-modal" onclick="toggleFeatureModal()">
+    <div class="patch-notes-card" onclick="event.stopPropagation()">
+        <span class="close-patch" onclick="toggleFeatureModal()">×</span>
+        <h4>✨ THE NEW FEATURES ✨</h4>
+        <ul>
+            <li><span>👵</span> INTERACTIVE GRANDMA: Click to wiggly her! Changes screen to B&W and slows music tempo.</li>
+            <li><span>📱</span> CLEANER POP-UPS: All website pop-ups converted to integrated in-web modals for a cleaner experience.</li>
+            <li><span>📫</span> CLOSED ENVELOPE ENDING: The ending now closes the envelope, wrapping things up neatly.</li>
+            <li><span>🌟</span> START AGAIN BUTTON: After the last line, a glowing button appears for a fresh start.</li>
+            <li><span>😎</span> CUSTOM FAVICON: Look for Manu's face next to the website link! Because we like him.</li>
+            <li><span>😜</span> FUNKY 'ARE YOU SURE?' TAB: Try clicking 'YES' on the 'did u like the surprise' tab... it shrinks and moves!</li>
+            <li><span>👍</span> PRIVACY RESPECT & NOTE: Note saying 'OKAY!!' and the envelope closes if photo access is declined.</li>
+            <li><span>💾</span> OFFLINE VIEW: Once viewed online, media is stored for offline viewing in the browser.</li>
+            <li><span>🔒</span> VERIFICATION LOGIN: Secure access added with a verification step.</li>
+            <li><span>🥚</span> HIDDEN EASTER EGGS: Search and discover special hidden surprises - chocolate and heart!</li>
+            <li><span>🔄</span> UPDATE FEATURE: Added functionality to receive and view future updates.</li>
+            <li><span>🌸</span> FLOWER ENVELOPE TRIGGER: Envelope now opens with a flourish and flower trigger.</li>
+            <li><span>🍰</span> CAKE SLICING & WISH: Interact with a cake slice and make a wish feature.</li>
+        </ul>
+    </div>
+</div>
 
 <div id="update-banner" onclick="handleUpdate()">
     ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
 
-<div class="ver-tag">v23.0.0</div>
+<div class="ver-tag">v25.0.0</div>
 
 <div id="lock-screen">
     <div class="lock-box">
@@ -524,7 +587,9 @@
     let errorCount = 0; let boxTaps = 0;
     const music = document.getElementById('bgMusic');
 
-    /* --- SERVICE WORKER V17 LOGIC --- */
+    function toggleFeatureModal() { document.getElementById('feature-modal').classList.toggle('show'); }
+
+    /* --- SERVICE WORKER LOGIC --- */
     let newWorker;
     let refreshing = false;
 
