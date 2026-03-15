@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miku-birthday-v250'; // Updated version
+const CACHE_NAME = 'miku-birthday-v300'; 
 const ASSETS = [
     './',
     './index.html',
@@ -13,7 +13,6 @@ const ASSETS = [
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log('Caching assets for version: ' + CACHE_NAME);
             return cache.addAll(ASSETS);
         })
     );
@@ -29,18 +28,13 @@ self.addEventListener('activate', (event) => {
                     }
                 })
             );
-        }).then(() => {
-            // FIX: Forces the new service worker to take control of the page immediately
-            return self.clients.claim();
-        })
+        }).then(() => self.clients.claim())
     );
 });
 
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then((response) => {
-            return response || fetch(event.request);
-        })
+        caches.match(event.request).then((response) => response || fetch(event.request))
     );
 });
 
