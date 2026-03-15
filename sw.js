@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miku-birthday-v16';
+const CACHE_NAME = 'miku-birthday-v17';
 const ASSETS = [
     './',
     './index.html',
@@ -8,40 +8,44 @@ const ASSETS = [
     'https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Miku_Present.jpg'
 ];
 
-// 1. Install: Force immediate activation
+// Install: Cache everything but DON'T take control yet
+// This prevents the page from refreshing automatically the moment it installs
 self.addEventListener('install', (event) => {
-    self.skipWaiting(); 
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+        caches.open(CACHE_NAME).then((cache) => {
+            console.log('V17 Cache opened');
+            return cache.addAll(ASSETS);
+        })
     );
 });
 
-// 2. Activate: Clear ALL old caches and take control
+// Activate: Clean up old versions (v16 and below)
 self.addEventListener('activate', (event) => {
     event.waitUntil(
-        Promise.all([
-            caches.keys().then((keys) => {
-                return Promise.all(
-                    keys.map((key) => {
-                        if (key !== CACHE_NAME) return caches.delete(key);
-                    })
-                );
-            }),
-            self.clients.claim() // Take control of open pages immediately
-        ])
+        caches.keys().then((keys) => {
+            return Promise.all(
+                keys.map((key) => {
+                    if (key !== CACHE_NAME) {
+                        console.log('Removing old cache:', key);
+                        return caches.delete(key);
+                    }
+                })
+            );
+        })
     );
 });
 
-// 3. Fetch: Network-first approach (Optional, but better for updates)
-// If you want it super aggressive, we check the network first. 
-// If offline, it falls back to cache.
+// Fetch: Serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         fetch(event.request).catch(() => caches.match(event.request))
     );
 });
 
-// Message listener for the manual refresh button
+// Manual Skip Waiting:
+// This ONLY runs when you click the "Update Ready" button on the website
 self.addEventListener('message', (event) => {
-    if (event.data === 'skipWaiting') self.skipWaiting();
+    if (event.data === 'skipWaiting') {
+        self.skipWaiting();
+    }
 });
