@@ -423,16 +423,36 @@
         <span class="close-patch" onclick="toggleFeatureModal()">×</span>
         <h4>✨ THE NEW FEATURES ✨</h4>
         <ul>
-            <li><span>⚽</span> FOOTBALL CHALLENGE: Score a goal to finish!to match my stylee</li>
-            <li><span>👵</span> INTERACTIVE GRANDMA: Click wiggly text to turn it b&w with music change</li>
-            <li><span>📫</span> CLOSED ENVELOPE: Neat closing animation.</li>
-            <li><span>🌟</span> START AGAIN: Glowing reset button once the surprise ends.</li>
-            <li><span>😎</span> CUSTOM FAVICON: U Can watch Manu at the top watching u!.</li>
-            <li><span>😜</span> PRANK MODE: Shrinking YES button in feedback in the are u sure.</li>
-            <li><span>🔒</span> VERIFICATION: Secure (DD/MM) code as a hint.</li>
-            <li><span>🥚</span> HIDDEN EASTER EGGS: Find the heart!</li>
-            <li><span>🔄</span> AUTO-UPDATE: Live notification banner.</li>
-            <li><span>🍰</span> CAKE SLICING: Interactive cake unboxing.</li>
+            <li>
+                <span>⚽</span> FOOTBALL CHALLENGE: Score a goal to finish!to match my stylee
+               </li>
+            <li>
+                <span>👵</span> INTERACTIVE GRANDMA: Click wiggly text to turn it b&w with music change
+                </li>
+            <li>
+                <span>📫</span> CLOSED ENVELOPE: Neat closing animation.
+                </li>
+            <li>
+                <span>🌟</span> START AGAIN: Glowing reset button once the surprise ends.
+                </li>
+            <li>
+                <span>😎</span> CUSTOM FAVICON: U Can watch Manu at the top watching u!.
+                </li>
+            <li>
+                <span>😜</span> PRANK MODE: Shrinking YES button in feedback in the are u sure.
+                </li>
+            <li>
+                <span>🔒</span> VERIFICATION: Secure (DD/MM) code as a hint.
+                </li>
+            <li>
+                <span>🥚</span> HIDDEN EASTER EGGS: Find the heart!
+                </li>
+            <li>
+                <span>🔄</span> AUTO-UPDATE: Live notification banner.
+                </li>
+            <li>
+                <span>🍰</span> CAKE SLICING: Interactive cake unboxing.
+                </li>
         </ul>
     </div>
 </div>
@@ -627,7 +647,7 @@
         });
 
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js?v=250').then(reg => {
+            navigator.serviceWorker.register('./sw.js?v=400').then(reg => {
                 if (reg.waiting) {
                     newWorker = reg.waiting;
                     document.getElementById('update-banner').style.display = 'flex';
@@ -715,26 +735,24 @@
         }
     }
 
-    function toggleMusic() { 
-        const currentActive = isGrandmaMode ? gMusic : music;
-        currentActive.paused ? currentActive.play() : currentActive.pause(); 
-    }
-
     function toggleGrandmaMode(e) {
-        e.stopPropagation();
-        const wasPlaying = !music.paused || !gMusic.paused;
-        isGrandmaMode = !isGrandmaMode;
-        showToast(isGrandmaMode ? "Grandma Mode: Activated" : "Grandma Mode: Deactivated", isGrandmaMode ? "👵" : "✨", 2500);
-        if (isGrandmaMode) {
-            document.body.classList.add('vintage-mode');
-            music.pause();
-            if(wasPlaying) { gMusic.currentTime = 0; gMusic.play(); }
-        } else {
-            document.body.classList.remove('vintage-mode');
-            gMusic.pause();
-            if(wasPlaying) { music.play(); }
-        }
+    e.stopPropagation();
+    const wasPlaying = !music.paused || !gMusic.paused;
+    isGrandmaMode = !isGrandmaMode;
+    
+    showToast(isGrandmaMode ? "Grandma Mode: Activated" : "Grandma Mode: Deactivated", isGrandmaMode ? "👵" : "✨", 2500);
+    
+    if (isGrandmaMode) {
+        // Apply filter to HTML instead of BODY to prevent breaking fixed positions
+        document.documentElement.style.filter = "grayscale(1) sepia(0.2)"; 
+        music.pause();
+        if(wasPlaying) { gMusic.currentTime = 0; gMusic.play(); }
+    } else {
+        document.documentElement.style.filter = "none";
+        gMusic.pause();
+        if(wasPlaying) { music.play(); }
     }
+}
 
     function revealSecret(e) { e.stopPropagation(); showToast("Wait, you actually found the hidden heart?!.. Neee pwoliiii anneeee mwolleee...Happy Birthday again, Miku Madam!", "💖", 5000); }
 
@@ -904,3 +922,4 @@
 </script>
 </body>
 </html>
+
