@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,6 +73,7 @@
             box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
         }
 
+        /* Color schemes for patch notes */
         .patch-notes-card li:nth-child(1) { background: #ffebee; border-left: 5px solid #ff1744; }
         .patch-notes-card li:nth-child(2) { background: #e3f2fd; border-left: 5px solid #2196f3; }
         .patch-notes-card li:nth-child(3) { background: #f1f8e9; border-left: 5px solid #7cb342; }
@@ -108,10 +108,12 @@
             font-size: 16px; box-sizing: border-box;
         }
         #pass-input:focus { border-color: var(--primary); }
+        
+        /* Fixed Button Z-index */
         .lock-btn {
             background: var(--primary); color: white; border: none;
             padding: 12px 30px; border-radius: 20px; font-weight: bold; cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s; position: relative; z-index: 30000;
         }
 
         #error-container {
@@ -289,7 +291,7 @@
             animation: pulseBtn 2s infinite;
         }
         
-        .btn-hint { font-size: 10px; color: var(--primary); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; animation: blink 1s infinite; }
+        .btn-hint { font-size: 10px; color: var(--primary); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; animation: blink 1.5s infinite; }
 
         @keyframes pulseBtn {
             0% { box-shadow: 0 0 0 0 rgba(194, 24, 91, 0.7); }
@@ -368,6 +370,7 @@
         .teddy-bear { font-size: 60px; display: inline-block; animation: floatBear 2s ease-in-out infinite; }
         @keyframes floatBear { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
         .continue-hint { font-size: 11px; color: var(--primary); font-weight: bold; margin-top: 15px; animation: blink 1.5s infinite; }
+        
         .sparkle-rain { position: fixed; top: -50px; font-size: 20px; pointer-events: none; z-index: 2500; animation: fullRain 4s linear forwards; }
         @keyframes fullRain { 0% { transform: translateY(-10vh); opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
         
@@ -420,19 +423,16 @@
         <span class="close-patch" onclick="toggleFeatureModal()">×</span>
         <h4>✨ THE NEW FEATURES ✨</h4>
         <ul>
-            <li><span>⚽</span> FOOTBALL CHALLENGE: Score a goal to finish the journey! Specialized for our goal poacher.</li>
-            <li><span>👵</span> INTERACTIVE GRANDMA: Click to wiggly her! Changes screen to B&W and Changes music.</li>
-            <li><span>📱</span> CLEANER POP-UPS: Integrated in-web modals for a smoother experience.</li>
-            <li><span>📫</span> CLOSED ENVELOPE ENDING: The ending now closes the envelope neatly.</li>
-            <li><span>🌟</span> START AGAIN BUTTON: A glowing reset button for a fresh start.</li>
-            <li><span>😎</span> CUSTOM FAVICON: Manu's face is now watching the site link.</li>
-            <li><span>😜</span> FUNKY 'ARE YOU SURE?' TAB: Shrinking 'YES' button added to the feedback menu.</li>
-            <li><span>👍</span> PRIVACY RESPECT: Proper handling if photo access is declined.</li>
-            <li><span>💾</span> OFFLINE VIEW: Media stored via Service Worker for offline viewing.</li>
-            <li><span>🔒</span> VERIFICATION LOGIN: Secure code entry (DD/MM).</li>
-            <li><span>🥚</span> HIDDEN EASTER EGGS: Search for the chocolate and heart!</li>
-            <li><span>🔄</span> UPDATE FEATURE: Real-time update banner for future changes.</li>
-            <li><span>🍰</span> CAKE SLICING: Interactive cake cutting feature.</li>
+            <li><span>⚽</span> FOOTBALL CHALLENGE: Score a goal to finish!</li>
+            <li><span>👵</span> INTERACTIVE GRANDMA: Click wiggly text to change vibe!</li>
+            <li><span>📫</span> CLOSED ENVELOPE: Neat closing animation.</li>
+            <li><span>🌟</span> START AGAIN: Glowing reset button.</li>
+            <li><span>😎</span> CUSTOM FAVICON: Updated identity.</li>
+            <li><span>😜</span> PRANK MODE: Shrinking YES button in feedback.</li>
+            <li><span>🔒</span> VERIFICATION: Secure (DD/MM) code.</li>
+            <li><span>🥚</span> HIDDEN EASTER EGGS: Find the heart!</li>
+            <li><span>🔄</span> AUTO-UPDATE: Live notification banner.</li>
+            <li><span>🍰</span> CAKE SLICING: Interactive cake unboxing.</li>
         </ul>
     </div>
 </div>
@@ -522,7 +522,6 @@
 
 <div id="soccer-goal-area"><div class="goal-text">GOAL HERE</div></div>
 <div id="soccer-ball" onclick="shootBall()">⚽</div>
-
 <div id="goal-note">"Another Goal achieved, Happy 17th"</div>
 
 <div id="cake-box">
@@ -585,17 +584,30 @@
 </div>
 
 <script>
-    /* --- PRESERVED VARIABLES & LOGIC --- */
+    /* --- SYSTEM INITIALIZATION --- */
     let currentStep = 1; let giftSubStep = 1; let chocolateClicks = 0;
     let rainInterval; let isPrankActive = false;
     let yesScale = 1; let isGrandmaMode = false;
     let errorCount = 0; let boxTaps = 0;
-    const music = document.getElementById('bgMusic');
-    const gMusic = document.getElementById('grandmaMusic');
+    
+    // Globals for music
+    let music, gMusic;
+
+    window.onload = () => {
+        music = document.getElementById('bgMusic');
+        gMusic = document.getElementById('grandmaMusic');
+        
+        // Critical Fix: Force button interaction capability
+        const unlockBtn = document.getElementById('unlock-btn');
+        if(unlockBtn) {
+            unlockBtn.style.pointerEvents = "auto";
+            unlockBtn.style.zIndex = "30000";
+        }
+    };
 
     function toggleFeatureModal() { document.getElementById('feature-modal').classList.toggle('show'); }
 
-    /* --- UPDATED SERVICE WORKER LOGIC (FIXED) --- */
+    /* --- SERVICE WORKER LOGIC --- */
     let newWorker;
     let refreshing = false;
 
@@ -615,7 +627,6 @@
         });
 
         window.addEventListener('load', () => {
-            // Version updated to v250 in the register query
             navigator.serviceWorker.register('./sw.js?v=250').then(reg => {
                 if (reg.waiting) {
                     newWorker = reg.waiting;
@@ -633,6 +644,7 @@
         });
     }
 
+    /* --- LOCK SCREEN LOGIC --- */
     const prankMessages = [
         "Wrong code! Try again. 🤫",
         "Miku Madam wouldn't forget... 🤨",
@@ -666,6 +678,7 @@
         const error = document.getElementById('lock-error');
         const errorContainer = document.getElementById('error-container');
         const unlockBtn = document.getElementById('unlock-btn');
+
         if(input === '2403') {
             if (navigator.vibrate) { navigator.vibrate(100); }
             const screen = document.getElementById('lock-screen');
@@ -679,6 +692,7 @@
             errorContainer.classList.remove('shake-error');
             void errorContainer.offsetWidth;
             errorContainer.classList.add('shake-error');
+            
             if (errorCount >= 3) {
                 const x = Math.random() * 40 - 20;
                 unlockBtn.style.transform = `translateX(${x}px)`;
@@ -688,6 +702,7 @@
         }
     }
 
+    /* --- GAMEPLAY LOGIC --- */
     function handleEnvelopeClick() {
         if (currentStep === 1) {
             music.play().catch(e => console.log("Audio blocked"));
@@ -721,7 +736,7 @@
         }
     }
 
-    function revealSecret(e) { e.stopPropagation(); showToast("Wait, you actually found the hidden heart?!..Neee pwoliiii anneeee mwolleee...Happy Birthday again, Miku Madam!", "💖", 5000); }
+    function revealSecret(e) { e.stopPropagation(); showToast("Secret found! Happy Birthday, Miku Madam!", "💖", 5000); }
 
     function showToast(message, emoji, duration) {
         const toast = document.getElementById('grandma-toast');
@@ -765,7 +780,7 @@
     function startSoccerChallenge() {
         document.getElementById('soccer-goal-area').style.display = 'block';
         document.getElementById('soccer-ball').style.display = 'block';
-        showToast("Final Boss: Score a Goal to finish! ⚽", "🏆", 4000);
+        showToast("Final Challenge: Goal Poacher Mode! ⚽", "🏆", 4000);
     }
 
     function showGoalNote() {
@@ -784,7 +799,6 @@
             ball.style.display = 'none';
             document.getElementById('soccer-goal-area').style.backgroundColor = "rgba(255, 255, 255, 0.4)";
             showGoalNote();
-            showToast("GOAAAAALLLLL! 🥳", "🥇", 2500);
             setTimeout(() => {
                 document.getElementById('soccer-goal-area').style.display = 'none';
                 const backBtn = document.getElementById('backBtn');
