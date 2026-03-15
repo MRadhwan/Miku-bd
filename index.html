@@ -455,7 +455,7 @@
         <h4>✨ THE NEW FEATURES ✨</h4>
         <ul>
             <li><span>⚽</span> FOOTBALL CHALLENGE: Score a goal to finish the journey! Specialized for our goal poacher.</li>
-            <li><span>👵</span> INTERACTIVE GRANDMA: Click to wiggly her! Changes screen to B&W and slows music tempo.</li>
+            <li><span>👵</span> INTERACTIVE GRANDMA: Click to wiggly her! Changes screen to B&W and Changes music.</li>
             <li><span>📱</span> CLEANER POP-UPS: Integrated in-web modals for a smoother experience.</li>
             <li><span>📫</span> CLOSED ENVELOPE ENDING: The ending now closes the envelope neatly.</li>
             <li><span>🌟</span> START AGAIN BUTTON: A glowing reset button for a fresh start.</li>
@@ -475,7 +475,7 @@
     ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
 
-<div class="ver-tag">v40.0.0</div>
+<div class="ver-tag">v45.0.0</div>
 
 <div id="lock-screen">
     <div class="lock-box">
@@ -500,7 +500,11 @@
 </div>
 
 <audio id="bgMusic" loop>
-    <source src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/Golden%20Brown%20-%20The%20Stranglers.mp3" type="audio/mpeg">
+    <source src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/The%20Stranglers%20-%20Golden%20Brown%2C%201981%20(HQ%20Instrumental)%20%2B%20Lyrics%20-%20Lunytunes62.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="grandmaMusic" loop>
+    <source src="https://raw.githubusercontent.com/MRadhwan/Miku-bd/main/love%20story%20(Instrumental)%20-%20indila%20%5Bedit%20audio%5D%20-%20Bgm%20Spice.mp3" type="audio/mpeg">
 </audio>
 
 <div id="grandma-toast">
@@ -620,6 +624,7 @@
     let yesScale = 1; let isGrandmaMode = false;
     let errorCount = 0; let boxTaps = 0;
     const music = document.getElementById('bgMusic');
+    const gMusic = document.getElementById('grandmaMusic');
 
     function toggleFeatureModal() { document.getElementById('feature-modal').classList.toggle('show'); }
 
@@ -732,20 +737,30 @@
         }
     }
 
-    function toggleMusic() { music.paused ? music.play() : music.pause(); }
+    function toggleMusic() { 
+        const currentActive = isGrandmaMode ? gMusic : music;
+        currentActive.paused ? currentActive.play() : currentActive.pause(); 
+    }
 
     function toggleGrandmaMode(e) {
         e.stopPropagation();
+        const wasPlaying = !music.paused || !gMusic.paused;
         isGrandmaMode = !isGrandmaMode;
         showToast(isGrandmaMode ? "Grandma Mode: Activated" : "Grandma Mode: Deactivated", isGrandmaMode ? "👵" : "✨", 2500);
+        
         if (isGrandmaMode) {
             document.body.classList.add('vintage-mode');
-            music.playbackRate = 0.85; 
-            music.volume = 0.5;        
+            music.pause();
+            if(wasPlaying) {
+                gMusic.currentTime = 0;
+                gMusic.play().catch(e => console.log("Grandma music blocked"));
+            }
         } else {
             document.body.classList.remove('vintage-mode');
-            music.playbackRate = 1.0;
-            music.volume = 1.0;
+            gMusic.pause();
+            if(wasPlaying) {
+                music.play().catch(e => console.log("Main music blocked"));
+            }
         }
     }
 
@@ -791,7 +806,6 @@
                 document.getElementById('envelope').classList.remove('open');
                 document.getElementById('mainWrapper').classList.remove('shifted');
                 
-                // TRIGGER SOCCER CHALLENGE AS FINAL BOSS
                 setTimeout(() => {
                     startSoccerChallenge();
                 }, 1000);
@@ -800,20 +814,17 @@
         }, 3000);
     }
 
-    /* --- SOCCER CHALLENGE FUNCTIONS --- */
     function startSoccerChallenge() {
         document.getElementById('soccer-goal-area').style.display = 'block';
         document.getElementById('soccer-ball').style.display = 'block';
         showToast("Final Boss: Score a Goal to finish! ⚽", "🏆", 4000);
     }
 
-    // FUNCTION TO SHOW THE BIRTHDAY GOAL NOTE
     function showGoalNote() {
         const note = document.getElementById('goal-note');
         note.style.display = 'block';
         note.classList.add('pop-animation');
         
-        // Hide it after 3 seconds
         setTimeout(() => {
             note.style.display = 'none';
             note.classList.remove('pop-animation');
@@ -831,7 +842,6 @@
             ball.style.display = 'none';
             document.getElementById('soccer-goal-area').style.backgroundColor = "rgba(255, 255, 255, 0.4)";
             
-            // --- TRIGGER THE NOTE HERE ---
             showGoalNote();
             
             showToast("GOAAAAALLLLL! 🥳", "🥇", 2500);
