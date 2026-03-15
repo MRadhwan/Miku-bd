@@ -461,7 +461,7 @@
     ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
 
-<div class="ver-tag">v350</div>
+<div class="ver-tag">v500</div>
 
 <div id="lock-screen">
     <div class="lock-box">
@@ -647,7 +647,7 @@
         });
 
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js?v=400').then(reg => {
+            navigator.serviceWorker.register('./sw.js?v=500').then(reg => {
                 if (reg.waiting) {
                     newWorker = reg.waiting;
                     document.getElementById('update-banner').style.display = 'flex';
