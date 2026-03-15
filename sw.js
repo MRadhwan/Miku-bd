@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miku-birthday-v24.3.26'; // Updated version
+const CACHE_NAME = 'miku-birthday-v250'; // Updated version
 const ASSETS = [
     './',
     './index.html',
