@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miku-birthday-v23';
+const CACHE_NAME = 'miku-birthday-v25';
 const ASSETS = [
     './',
     './index.html',
@@ -9,17 +9,16 @@ const ASSETS = [
 ];
 
 // Install: Cache everything but DON'T take control yet
-// This prevents the page from refreshing automatically the moment it installs
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log('V17 Cache opened');
+            console.log('V25 Cache opened');
             return cache.addAll(ASSETS);
         })
     );
 });
 
-// Activate: Clean up old versions (v16 and below)
+// Activate: Clean up old versions
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keys) => {
@@ -43,7 +42,6 @@ self.addEventListener('fetch', (event) => {
 });
 
 // Manual Skip Waiting:
-// This ONLY runs when you click the "Update Ready" button on the website
 self.addEventListener('message', (event) => {
     if (event.data === 'skipWaiting') {
         self.skipWaiting();
