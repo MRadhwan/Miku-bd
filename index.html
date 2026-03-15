@@ -475,7 +475,7 @@
     ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
 
-<div class="ver-tag">v24.3.09</div>
+<div class="ver-tag">v45.0.0</div>
 
 <div id="lock-screen">
     <div class="lock-box">
@@ -628,14 +628,22 @@
 
     function toggleFeatureModal() { document.getElementById('feature-modal').classList.toggle('show'); }
 
-    /* --- IMPROVED SERVICE WORKER LOGIC --- */
+    /* --- SERVICE WORKER LOGIC --- */
+    let currentStep = 1; let giftSubStep = 1; let chocolateClicks = 0;
+    let rainInterval; let isPrankActive = false;
+    let yesScale = 1; let isGrandmaMode = false;
+    let errorCount = 0; let boxTaps = 0;
+    const music = document.getElementById('bgMusic');
+    const gMusic = document.getElementById('grandmaMusic');
+
+    function toggleFeatureModal() { document.getElementById('feature-modal').classList.toggle('show'); }
+
+    /* --- FIXED SERVICE WORKER LOGIC --- */
     let newWorker;
     let refreshing = false;
 
-    // This function is called when Miku taps the banner
     function handleUpdate() {
         if (newWorker) {
-            // This sends the kill signal to the old version
             newWorker.postMessage('skipWaiting');
         } else {
             window.location.reload();
@@ -643,16 +651,16 @@
     }
 
     if ('serviceWorker' in navigator) {
-        // This is the CRITICAL part: it waits until the new worker is active
+        // Automatically reload when the new worker takes control
         navigator.serviceWorker.addEventListener('controllerchange', () => {
             if (refreshing) return;
             refreshing = true;
-            window.location.reload(); // Now it will reload with the NEW content
+            window.location.reload();
         });
 
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then(reg => {
-                // Check if there is already an update waiting in the background
+            // Version updated to 24.3.26 to force-check the script
+            navigator.serviceWorker.register('./sw.js?v=24.3.26').then(reg => {
                 if (reg.waiting) {
                     newWorker = reg.waiting;
                     document.getElementById('update-banner').style.display = 'flex';
@@ -661,7 +669,6 @@
                 reg.addEventListener('updatefound', () => {
                     newWorker = reg.installing;
                     newWorker.addEventListener('statechange', () => {
-                        // Only show the banner once the new files are fully downloaded (installed)
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                             document.getElementById('update-banner').style.display = 'flex';
                         }
@@ -670,7 +677,7 @@
             });
         });
     }
-
+    
     const prankMessages = [
         "Wrong code! Try again. 🤫",
         "Miku Madam wouldn't forget... 🤨",
