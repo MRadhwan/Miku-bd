@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +37,6 @@
             transition: filter 0.8s ease;
         }
 
-        /* --- FEATURE: BOOK ICON & MODAL STYLING --- */
         #feature-icon {
             position: fixed; top: 20px; left: 20px;
             background: white; border-radius: 50%; width: 40px; height: 40px;
@@ -67,20 +67,11 @@
         }
         .patch-notes-card h4 { margin: 0 0 15px 0; color: var(--primary); text-transform: uppercase; text-align: center; font-weight: 900; letter-spacing: 1px;}
         
-        /* --- STYLIZED LIST ITEMS --- */
         .patch-notes-card ul { margin: 0; padding: 0; list-style: none; }
         .patch-notes-card li { 
-            margin-bottom: 10px; 
-            padding: 12px; 
-            border-radius: 12px; 
-            font-size: 12px; 
-            line-height: 1.4;
-            color: #444;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 10px; padding: 12px; border-radius: 12px; font-size: 12px; line-height: 1.4;
+            color: #444; display: flex; align-items: center; gap: 10px; font-weight: 600;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
-            font-weight: 600;
         }
 
         .patch-notes-card li:nth-child(1) { background: #ffebee; border-left: 5px solid #ff1744; }
@@ -97,12 +88,8 @@
         .patch-notes-card li:nth-child(12) { background: #d1c4e9; border-left: 5px solid #512da8; }
         .patch-notes-card li:nth-child(13) { background: #b2dfdb; border-left: 5px solid #00695c; }
         
-        .close-patch {
-            position: absolute; top: 10px; right: 15px; font-size: 20px;
-            color: var(--primary); font-weight: bold; cursor: pointer; z-index: 10;
-        }
+        .close-patch { position: absolute; top: 10px; right: 15px; font-size: 20px; color: var(--primary); font-weight: bold; cursor: pointer; z-index: 10; }
 
-        /* --- LOCK SCREEN STYLING --- */
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #fce4ec; z-index: 20000;
@@ -302,10 +289,7 @@
             animation: pulseBtn 2s infinite;
         }
         
-        .btn-hint {
-            font-size: 10px; color: var(--primary); font-weight: bold;
-            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; animation: blink 1s infinite;
-        }
+        .btn-hint { font-size: 10px; color: var(--primary); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; animation: blink 1s infinite; }
 
         @keyframes pulseBtn {
             0% { box-shadow: 0 0 0 0 rgba(194, 24, 91, 0.7); }
@@ -322,10 +306,7 @@
         #secret-modal.show { transform: translate(-50%, -50%) scale(1); }
 
         .secret-title { color: #880e4f; font-weight: bold; margin-bottom: 20px; font-size: 18px; }
-        .secret-msg { 
-            display: none; color: var(--primary); font-size: 20px; font-style: italic; 
-            animation: heartBeat 1.5s infinite; line-height: 1.4;
-        }
+        .secret-msg { display: none; color: var(--primary); font-size: 20px; font-style: italic; animation: heartBeat 1.5s infinite; line-height: 1.4; }
         .signature { display: block; font-size: 14px; margin-top: 10px; color: #5d4037; font-weight: normal; }
 
         @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
@@ -345,10 +326,7 @@
         .btn-yes { background: var(--primary); color: white; width: 80px; }
         .btn-no { background: #fce4ec; color: #c2185b; width: 80px; }
 
-        #puppy-face {
-            display: none; position: absolute; bottom: 110%; left: 50%;
-            transform: translateX(-50%); font-size: 30px; pointer-events: none;
-        }
+        #puppy-face { display: none; position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%); font-size: 30px; pointer-events: none; }
 
         #backBtn {
             margin-top: 40px; background: var(--primary); color: white;
@@ -356,10 +334,7 @@
             font-weight: bold; cursor: pointer; z-index: 2000;
             visibility: hidden; opacity: 0; transition: 0.5s;
         }
-        #backBtn.ready-glow {
-            animation: glowButton 1.5s infinite;
-            box-shadow: 0 0 20px var(--primary);
-        }
+        #backBtn.ready-glow { animation: glowButton 1.5s infinite; box-shadow: 0 0 20px var(--primary); }
 
         @keyframes glowButton {
             0% { transform: scale(1); box-shadow: 0 0 5px var(--primary); }
@@ -396,10 +371,7 @@
         .sparkle-rain { position: fixed; top: -50px; font-size: 20px; pointer-events: none; z-index: 2500; animation: fullRain 4s linear forwards; }
         @keyframes fullRain { 0% { transform: translateY(-10vh); opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
         
-        .grandma-text { 
-            display: inline-block; color: #880e4f; font-weight: bold; 
-            animation: wiggle 0.5s infinite; cursor: pointer; text-decoration: underline dotted;
-        }
+        .grandma-text { display: inline-block; color: #880e4f; font-weight: bold; animation: wiggle 0.5s infinite; cursor: pointer; text-decoration: underline dotted; }
         @keyframes wiggle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 
         #update-banner {
@@ -413,7 +385,6 @@
 
         .ver-tag { position: fixed; bottom: 5px; right: 8px; font-size: 8px; color: var(--primary); opacity: 0.4; z-index: 10000; }
 
-        /* --- FEATURE: SOCCER CHALLENGE --- */
         #soccer-goal-area {
             display: none; position: fixed; bottom: 80px; left: 50%; 
             transform: translateX(-50%); width: 200px; height: 100px;
@@ -427,19 +398,14 @@
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
         }
-        .goal-text {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            color: white; font-weight: bold; font-size: 14px; opacity: 0.6; text-transform: uppercase;
-        }
+        .goal-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; font-size: 14px; opacity: 0.6; text-transform: uppercase; }
 
-        /* --- ADDED: SOCCER NOTE STYLING --- */
         #goal-note {
             display: none; position: fixed; top: 40%; left: 50%; 
             transform: translate(-50%, -50%); z-index: 9000;
             background: white; border: 3px solid var(--gold);
             padding: 15px 25px; border-radius: 20px; font-weight: bold;
-            color: var(--primary); text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            color: var(--primary); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .pop-animation { animation: popNote 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes popNote { from { transform: translate(-50%, -50%) scale(0); } to { transform: translate(-50%, -50%) scale(1.2); } }
@@ -475,7 +441,7 @@
     ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
 
-<div class="ver-tag">v45.0.0</div>
+<div class="ver-tag">v250</div>
 
 <div id="lock-screen">
     <div class="lock-box">
@@ -619,6 +585,7 @@
 </div>
 
 <script>
+    /* --- PRESERVED VARIABLES & LOGIC --- */
     let currentStep = 1; let giftSubStep = 1; let chocolateClicks = 0;
     let rainInterval; let isPrankActive = false;
     let yesScale = 1; let isGrandmaMode = false;
@@ -628,17 +595,7 @@
 
     function toggleFeatureModal() { document.getElementById('feature-modal').classList.toggle('show'); }
 
-    /* --- SERVICE WORKER LOGIC --- */
-    let currentStep = 1; let giftSubStep = 1; let chocolateClicks = 0;
-    let rainInterval; let isPrankActive = false;
-    let yesScale = 1; let isGrandmaMode = false;
-    let errorCount = 0; let boxTaps = 0;
-    const music = document.getElementById('bgMusic');
-    const gMusic = document.getElementById('grandmaMusic');
-
-    function toggleFeatureModal() { document.getElementById('feature-modal').classList.toggle('show'); }
-
-    /* --- FIXED SERVICE WORKER LOGIC --- */
+    /* --- UPDATED SERVICE WORKER LOGIC (FIXED) --- */
     let newWorker;
     let refreshing = false;
 
@@ -651,7 +608,6 @@
     }
 
     if ('serviceWorker' in navigator) {
-        // Automatically reload when the new worker takes control
         navigator.serviceWorker.addEventListener('controllerchange', () => {
             if (refreshing) return;
             refreshing = true;
@@ -659,13 +615,12 @@
         });
 
         window.addEventListener('load', () => {
-            // Version updated to 24.3.26 to force-check the script
-            navigator.serviceWorker.register('./sw.js?v=24.3.26').then(reg => {
+            // Version updated to v250 in the register query
+            navigator.serviceWorker.register('./sw.js?v=250').then(reg => {
                 if (reg.waiting) {
                     newWorker = reg.waiting;
                     document.getElementById('update-banner').style.display = 'flex';
                 }
-
                 reg.addEventListener('updatefound', () => {
                     newWorker = reg.installing;
                     newWorker.addEventListener('statechange', () => {
@@ -677,7 +632,7 @@
             });
         });
     }
-    
+
     const prankMessages = [
         "Wrong code! Try again. 🤫",
         "Miku Madam wouldn't forget... 🤨",
@@ -702,12 +657,8 @@
         box.classList.add('shake-error');
         box.style.transform = `scale(${1 + (boxTaps * 0.15)}) rotate(${boxTaps * 3}deg)`;
         if (navigator.vibrate) navigator.vibrate(50);
-        if (boxTaps < 4) {
-            countText.innerHTML = (4 - boxTaps) + " more taps!";
-        } else {
-            box.style.display = 'none';
-            document.getElementById('hint-bubble').style.display = 'block';
-        }
+        if (boxTaps < 4) { countText.innerHTML = (4 - boxTaps) + " more taps!"; } 
+        else { box.style.display = 'none'; document.getElementById('hint-bubble').style.display = 'block'; }
     }
 
     function checkPass() {
@@ -715,7 +666,6 @@
         const error = document.getElementById('lock-error');
         const errorContainer = document.getElementById('error-container');
         const unlockBtn = document.getElementById('unlock-btn');
-
         if(input === '2403') {
             if (navigator.vibrate) { navigator.vibrate(100); }
             const screen = document.getElementById('lock-screen');
@@ -760,27 +710,18 @@
         const wasPlaying = !music.paused || !gMusic.paused;
         isGrandmaMode = !isGrandmaMode;
         showToast(isGrandmaMode ? "Grandma Mode: Activated" : "Grandma Mode: Deactivated", isGrandmaMode ? "👵" : "✨", 2500);
-        
         if (isGrandmaMode) {
             document.body.classList.add('vintage-mode');
             music.pause();
-            if(wasPlaying) {
-                gMusic.currentTime = 0;
-                gMusic.play().catch(e => console.log("Grandma music blocked"));
-            }
+            if(wasPlaying) { gMusic.currentTime = 0; gMusic.play(); }
         } else {
             document.body.classList.remove('vintage-mode');
             gMusic.pause();
-            if(wasPlaying) {
-                music.play().catch(e => console.log("Main music blocked"));
-            }
+            if(wasPlaying) { music.play(); }
         }
     }
 
-    function revealSecret(e) { 
-        e.stopPropagation(); 
-        showToast("Wait, you actually found the hidden heart?!..Neee pwoliiii anneeee mwolleee...Happy Birthday again, Miku Madam!", "💖", 5000);
-    }
+    function revealSecret(e) { e.stopPropagation(); showToast("Wait, you actually found the hidden heart?!..Neee pwoliiii anneeee mwolleee...Happy Birthday again, Miku Madam!", "💖", 5000); }
 
     function showToast(message, emoji, duration) {
         const toast = document.getElementById('grandma-toast');
@@ -805,7 +746,6 @@
         else { text.innerHTML = '"OKAY!!"'; emoji.innerHTML = '👍✨'; }
         document.getElementById('ask-content').style.display = 'none';
         document.getElementById('msg-content').style.display = 'block';
-        
         setTimeout(() => {
             const modal = document.getElementById('secret-modal');
             modal.classList.remove('show');
@@ -813,16 +753,11 @@
             const letter = document.getElementById('letter');
             letter.style.transform = "translate(-50%, -50%) scale(0.1)";
             letter.style.opacity = "0";
-            
             setTimeout(() => {
                 modal.style.display = 'none';
                 document.getElementById('envelope').classList.remove('open');
                 document.getElementById('mainWrapper').classList.remove('shifted');
-                
-                setTimeout(() => {
-                    startSoccerChallenge();
-                }, 1000);
-                
+                setTimeout(() => { startSoccerChallenge(); }, 1000);
             }, 800);
         }, 3000);
     }
@@ -837,28 +772,19 @@
         const note = document.getElementById('goal-note');
         note.style.display = 'block';
         note.classList.add('pop-animation');
-        
-        setTimeout(() => {
-            note.style.display = 'none';
-            note.classList.remove('pop-animation');
-        }, 3000);
+        setTimeout(() => { note.style.display = 'none'; note.classList.remove('pop-animation'); }, 3000);
     }
 
     function shootBall() {
         const ball = document.getElementById('soccer-ball');
         ball.style.bottom = "120px";
         ball.style.transform = "translateX(-50%) scale(0.6) rotate(720deg)";
-        
         if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-
         setTimeout(() => {
             ball.style.display = 'none';
             document.getElementById('soccer-goal-area').style.backgroundColor = "rgba(255, 255, 255, 0.4)";
-            
             showGoalNote();
-            
             showToast("GOAAAAALLLLL! 🥳", "🥇", 2500);
-            
             setTimeout(() => {
                 document.getElementById('soccer-goal-area').style.display = 'none';
                 const backBtn = document.getElementById('backBtn');
@@ -881,10 +807,7 @@
                     const toast = document.getElementById('custom-toast');
                     cakeBox.classList.remove('show');
                     toast.classList.add('show');
-                    setTimeout(() => {
-                        toast.classList.remove('show');
-                        document.getElementById('photo-container').style.display = 'block';
-                    }, 2500);
+                    setTimeout(() => { toast.classList.remove('show'); document.getElementById('photo-container').style.display = 'block'; }, 2500);
                 }, 1200);
             }, 500);
         }
@@ -937,10 +860,8 @@
     function handleMenuResponse(isYes) {
         const puppy = document.getElementById('puppy-face');
         if (isYes) {
-            if (!isPrankActive) {
-                document.getElementById('interactive-menu').classList.remove('show');
-                document.getElementById('chocolatePop').classList.add('active');
-            } else { moveYes(); }
+            if (!isPrankActive) { document.getElementById('interactive-menu').classList.remove('show'); document.getElementById('chocolatePop').classList.add('active'); } 
+            else { moveYes(); }
         } else {
             if (!isPrankActive) {
                 isPrankActive = true; 
@@ -969,4 +890,3 @@
 </script>
 </body>
 </html>
-
