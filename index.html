@@ -360,6 +360,7 @@
         }
         @keyframes wiggle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 
+        /* --- UPDATE BANNER --- */
         #update-banner {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: var(--primary); color: white; padding: 12px 25px;
@@ -369,6 +370,11 @@
             border: 2px solid white; animation: slideUp 0.5s ease-out;
         }
         @keyframes slideUp { from { bottom: -80px; } to { bottom: 20px; } }
+
+        .ver-tag {
+            position: fixed; bottom: 5px; right: 8px; font-size: 8px; 
+            color: var(--primary); opacity: 0.4; z-index: 10000;
+        }
     </style>
 </head>
 <body>
@@ -376,6 +382,8 @@
 <div id="update-banner" onclick="handleUpdate()">
     ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
+
+<div class="ver-tag">v16.0.0</div>
 
 <div id="lock-screen">
     <div class="lock-box">
@@ -515,7 +523,45 @@
     let yesScale = 1; let isGrandmaMode = false;
     let errorCount = 0; let boxTaps = 0;
     const music = document.getElementById('bgMusic');
+    
+    // SERVICE WORKER & UPDATE LOGIC
     let newWorker;
+    let refreshing = false;
+
+    function handleUpdate() {
+        if (newWorker) {
+            newWorker.postMessage('skipWaiting');
+        } else {
+            window.location.reload();
+        }
+    }
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) return;
+            window.location.reload();
+            refreshing = true;
+        });
+
+        window.addEventListener('load', () => {
+            // Aggressive registration with timestamp bypass
+            navigator.serviceWorker.register('./sw.js?v=16' + Date.now()).then(reg => {
+                if (reg.waiting) {
+                    newWorker = reg.waiting;
+                    document.getElementById('update-banner').style.display = 'flex';
+                }
+
+                reg.addEventListener('updatefound', () => {
+                    newWorker = reg.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            document.getElementById('update-banner').style.display = 'flex';
+                        }
+                    });
+                });
+            });
+        });
+    }
 
     const prankMessages = [
         "Wrong code! Try again. 🤫",
@@ -750,35 +796,6 @@
         const y = Math.random() * 60 - 30;
         if (yesScale > 0.3) { yesScale -= 0.15; }
         container.style.transform = `translate(${x}px, ${y}px) scale(${yesScale})`;
-    }
-
-    function handleUpdate() {
-        if (newWorker) {
-            newWorker.postMessage('skipWaiting');
-        }
-    }
-
-    // SERVICE WORKER LOGIC - V15
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js?v=15').then(reg => {
-                reg.addEventListener('updatefound', () => {
-                    newWorker = reg.installing;
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            document.getElementById('update-banner').style.display = 'flex';
-                        }
-                    });
-                });
-            });
-        });
-
-        let refreshing;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (refreshing) return;
-            window.location.reload();
-            refreshing = true;
-        });
     }
 </script>
 </body>
