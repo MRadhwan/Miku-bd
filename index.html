@@ -83,7 +83,6 @@
             font-weight: 600;
         }
 
-        /* Unique Pastel Colors for each list item */
         .patch-notes-card li:nth-child(1) { background: #ffebee; border-left: 5px solid #ff1744; }
         .patch-notes-card li:nth-child(2) { background: #e3f2fd; border-left: 5px solid #2196f3; }
         .patch-notes-card li:nth-child(3) { background: #f1f8e9; border-left: 5px solid #7cb342; }
@@ -394,7 +393,6 @@
         .teddy-bear { font-size: 60px; display: inline-block; animation: floatBear 2s ease-in-out infinite; }
         @keyframes floatBear { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
         .continue-hint { font-size: 11px; color: var(--primary); font-weight: bold; margin-top: 15px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .sparkle-rain { position: fixed; top: -50px; font-size: 20px; pointer-events: none; z-index: 2500; animation: fullRain 4s linear forwards; }
         @keyframes fullRain { 0% { transform: translateY(-10vh); opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
         
@@ -414,6 +412,37 @@
         @keyframes slideUp { from { bottom: -80px; } to { bottom: 20px; } }
 
         .ver-tag { position: fixed; bottom: 5px; right: 8px; font-size: 8px; color: var(--primary); opacity: 0.4; z-index: 10000; }
+
+        /* --- FEATURE: SOCCER CHALLENGE --- */
+        #soccer-goal-area {
+            display: none; position: fixed; bottom: 80px; left: 50%; 
+            transform: translateX(-50%); width: 200px; height: 100px;
+            border: 4px solid white; border-bottom: none; border-radius: 15px 15px 0 0;
+            z-index: 8000; background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+        #soccer-ball {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            font-size: 45px; cursor: pointer; z-index: 8001; display: none;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+        }
+        .goal-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: white; font-weight: bold; font-size: 14px; opacity: 0.6; text-transform: uppercase;
+        }
+
+        /* --- ADDED: SOCCER NOTE STYLING --- */
+        #goal-note {
+            display: none; position: fixed; top: 40%; left: 50%; 
+            transform: translate(-50%, -50%); z-index: 9000;
+            background: white; border: 3px solid var(--gold);
+            padding: 15px 25px; border-radius: 20px; font-weight: bold;
+            color: var(--primary); text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .pop-animation { animation: popNote 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popNote { from { transform: translate(-50%, -50%) scale(0); } to { transform: translate(-50%, -50%) scale(1.2); } }
     </style>
 </head>
 <body>
@@ -425,19 +454,19 @@
         <span class="close-patch" onclick="toggleFeatureModal()">×</span>
         <h4>✨ THE NEW FEATURES ✨</h4>
         <ul>
+            <li><span>⚽</span> SOCCER CHALLENGE: Score a goal to finish the journey! Specialized for our goal poacher.</li>
             <li><span>👵</span> INTERACTIVE GRANDMA: Click to wiggly her! Changes screen to B&W and slows music tempo.</li>
-            <li><span>📱</span> CLEANER POP-UPS: All website pop-ups converted to integrated in-web modals for a cleaner experience.</li>
-            <li><span>📫</span> CLOSED ENVELOPE ENDING: The ending now closes the envelope, wrapping things up neatly.</li>
-            <li><span>🌟</span> START AGAIN BUTTON: After the last line, a glowing button appears for a fresh start.</li>
-            <li><span>😎</span> CUSTOM FAVICON: Look for Manu's face next to the website link! Because we like him.</li>
-            <li><span>😜</span> FUNKY 'ARE YOU SURE?' TAB: Try clicking 'YES' on the 'did u like the surprise' tab... it shrinks and moves!</li>
-            <li><span>👍</span> PRIVACY RESPECT & NOTE: Note saying 'OKAY!!' and the envelope closes if photo access is declined.</li>
-            <li><span>💾</span> OFFLINE VIEW: Once viewed online, media is stored for offline viewing in the browser.</li>
-            <li><span>🔒</span> VERIFICATION LOGIN: Secure access added with a verification step.</li>
-            <li><span>🥚</span> HIDDEN EASTER EGGS: Search and discover special hidden surprises - chocolate and heart!</li>
-            <li><span>🔄</span> UPDATE FEATURE: Added functionality to receive and view future updates.</li>
-            <li><span>🌸</span> FLOWER ENVELOPE TRIGGER: Envelope now opens with a flourish and flower trigger.</li>
-            <li><span>🍰</span> CAKE SLICING & WISH: Interact with a cake slice and make a wish feature.</li>
+            <li><span>📱</span> CLEANER POP-UPS: Integrated in-web modals for a smoother experience.</li>
+            <li><span>📫</span> CLOSED ENVELOPE ENDING: The ending now closes the envelope neatly.</li>
+            <li><span>🌟</span> START AGAIN BUTTON: A glowing reset button for a fresh start.</li>
+            <li><span>😎</span> CUSTOM FAVICON: Manu's face is now watching the site link.</li>
+            <li><span>😜</span> FUNKY 'ARE YOU SURE?' TAB: Shrinking 'YES' button added to the feedback menu.</li>
+            <li><span>👍</span> PRIVACY RESPECT: Proper handling if photo access is declined.</li>
+            <li><span>💾</span> OFFLINE VIEW: Media stored via Service Worker for offline viewing.</li>
+            <li><span>🔒</span> VERIFICATION LOGIN: Secure code entry (DD/MM).</li>
+            <li><span>🥚</span> HIDDEN EASTER EGGS: Search for the chocolate and heart!</li>
+            <li><span>🔄</span> UPDATE FEATURE: Real-time update banner for future changes.</li>
+            <li><span>🍰</span> CAKE SLICING: Interactive cake cutting feature.</li>
         </ul>
     </div>
 </div>
@@ -446,7 +475,7 @@
     ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
 
-<div class="ver-tag">v26.0.0</div>
+<div class="ver-tag">v27.0.0</div>
 
 <div id="lock-screen">
     <div class="lock-box">
@@ -520,6 +549,11 @@
     </div>
     <button id="backBtn" onclick="location.reload()">Start Again</button>
 </div>
+
+<div id="soccer-goal-area"><div class="goal-text">GOAL HERE</div></div>
+<div id="soccer-ball" onclick="shootBall()">⚽</div>
+
+<div id="goal-note">"Another Goal achieved, Happy 17th"</div>
 
 <div id="cake-box">
     <div class="cake-emoji" id="cakeEmoji">🎂<span class="knife">🔪</span></div>
@@ -743,6 +777,7 @@
         else { text.innerHTML = '"OKAY!!"'; emoji.innerHTML = '👍✨'; }
         document.getElementById('ask-content').style.display = 'none';
         document.getElementById('msg-content').style.display = 'block';
+        
         setTimeout(() => {
             const modal = document.getElementById('secret-modal');
             modal.classList.remove('show');
@@ -750,17 +785,65 @@
             const letter = document.getElementById('letter');
             letter.style.transform = "translate(-50%, -50%) scale(0.1)";
             letter.style.opacity = "0";
+            
             setTimeout(() => {
                 modal.style.display = 'none';
                 document.getElementById('envelope').classList.remove('open');
                 document.getElementById('mainWrapper').classList.remove('shifted');
+                
+                // TRIGGER SOCCER CHALLENGE AS FINAL BOSS
                 setTimeout(() => {
-                    currentStep = 1; giftSubStep = 1; chocolateClicks = 0; isPrankActive = false;
-                    letter.style.transform = ""; 
-                    document.getElementById('backBtn').classList.add('ready-glow');
+                    startSoccerChallenge();
                 }, 1000);
+                
             }, 800);
         }, 3000);
+    }
+
+    /* --- SOCCER CHALLENGE FUNCTIONS --- */
+    function startSoccerChallenge() {
+        document.getElementById('soccer-goal-area').style.display = 'block';
+        document.getElementById('soccer-ball').style.display = 'block';
+        showToast("Final Boss: Score a Goal to finish! ⚽", "🏆", 4000);
+    }
+
+    // FUNCTION TO SHOW THE BIRTHDAY GOAL NOTE
+    function showGoalNote() {
+        const note = document.getElementById('goal-note');
+        note.style.display = 'block';
+        note.classList.add('pop-animation');
+        
+        // Hide it after 3 seconds
+        setTimeout(() => {
+            note.style.display = 'none';
+            note.classList.remove('pop-animation');
+        }, 3000);
+    }
+
+    function shootBall() {
+        const ball = document.getElementById('soccer-ball');
+        ball.style.bottom = "120px";
+        ball.style.transform = "translateX(-50%) scale(0.6) rotate(720deg)";
+        
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+        setTimeout(() => {
+            ball.style.display = 'none';
+            document.getElementById('soccer-goal-area').style.backgroundColor = "rgba(255, 255, 255, 0.4)";
+            
+            // --- TRIGGER THE NOTE HERE ---
+            showGoalNote();
+            
+            showToast("GOAAAAALLLLL! 🥳", "🥇", 2500);
+            
+            setTimeout(() => {
+                document.getElementById('soccer-goal-area').style.display = 'none';
+                const backBtn = document.getElementById('backBtn');
+                backBtn.style.visibility = 'visible';
+                backBtn.style.opacity = '1';
+                backBtn.classList.add('ready-glow');
+            }, 1500);
+        }, 500);
     }
 
     function handleChocolateClick() {
