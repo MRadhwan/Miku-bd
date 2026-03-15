@@ -383,7 +383,7 @@
     ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
 
-<div class="ver-tag">v16.0.0</div>
+<div class="ver-tag">v17.0.0</div>
 
 <div id="lock-screen">
     <div class="lock-box">
@@ -523,8 +523,8 @@
     let yesScale = 1; let isGrandmaMode = false;
     let errorCount = 0; let boxTaps = 0;
     const music = document.getElementById('bgMusic');
-    
-    // SERVICE WORKER & UPDATE LOGIC
+
+    /* --- SERVICE WORKER V17 LOGIC --- */
     let newWorker;
     let refreshing = false;
 
@@ -539,18 +539,16 @@
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.addEventListener('controllerchange', () => {
             if (refreshing) return;
-            window.location.reload();
             refreshing = true;
+            window.location.reload();
         });
 
         window.addEventListener('load', () => {
-            // Aggressive registration with timestamp bypass
-            navigator.serviceWorker.register('./sw.js?v=16' + Date.now()).then(reg => {
+            navigator.serviceWorker.register('./sw.js').then(reg => {
                 if (reg.waiting) {
                     newWorker = reg.waiting;
                     document.getElementById('update-banner').style.display = 'flex';
                 }
-
                 reg.addEventListener('updatefound', () => {
                     newWorker = reg.installing;
                     newWorker.addEventListener('statechange', () => {
