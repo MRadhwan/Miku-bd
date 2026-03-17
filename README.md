@@ -1,3 +1,4 @@
+![1000240182](https://github.com/user-attachments/assets/b682e0a2-635d-4231-a533-4613cdd4ea7c)
 # 🏛️ THE SILENT ARCHITECT | Project: Miku-bd (v500)
 
 ---
