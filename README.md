@@ -37,7 +37,7 @@ This project represents a focused 5-day development cycle, evolving from a simpl
 ## 🛠️ CORE ARCHITECTURE & FEATURES
 
 ### 🔐 Security & Entry
-* **Passcode Gateway:** Access is restricted via a 2403 verification code.
+* **Passcode Gateway:** Access is restricted via a **** verification code.
 * **Interactive Hints:** A custom-coded hint mechanic requires physical interaction to reveal access clues.
 
 ### 🎭 Dynamic Personalization
