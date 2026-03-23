@@ -1,4 +1,4 @@
-const CACHE_NAME = 'miku-birthday-v600'; 
+const CACHE_NAME = 'miku-birthday-v700'; 
 const ASSETS = [
     './',
     './index.html',
