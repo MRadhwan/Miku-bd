@@ -109,7 +109,6 @@
         }
         #pass-input:focus { border-color: var(--primary); }
         
-        /* Fixed Button Z-index */
         .lock-btn {
             background: var(--primary); color: white; border: none;
             padding: 12px 30px; border-radius: 20px; font-weight: bold; cursor: pointer;
@@ -344,11 +343,13 @@
             100% { transform: scale(1); box-shadow: 0 0 5px var(--primary); }
         }
 
+        /* --- THE FIXED TOGGLE STYLE --- */
         #musicToggle {
             position: fixed; top: 20px; right: 20px;
             background: white; border-radius: 50%; width: 40px; height: 40px;
             display: none; justify-content: center; align-items: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 4000; cursor: pointer;
+            font-size: 18px; border: 2.5px solid var(--primary);
         }
 
         #gift-overlay {
@@ -424,7 +425,7 @@
         <h4>✨ THE NEW FEATURES ✨</h4>
         <ul>
             <li>
-                <span>⚽</span> FOOTBALL CHALLENGE: Score a goal to finish!(To match my stylee)
+                <span>⚽</span> FOOTBALL CHALLENGE: Score a goal to finish!(To Match My Style)
                </li>
             <li>
                 <span>👵</span> INTERACTIVE GRANDMA: Click wiggly text to turn it B&W with music change
@@ -461,7 +462,7 @@
     ✨ Update Ready! <span>Tap to Refresh</span>
 </div>
 
-<div class="ver-tag">v600</div>
+<div class="ver-tag">v700</div>
 
 <div id="lock-screen">
     <div class="lock-box">
@@ -647,7 +648,7 @@
         });
 
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js?v=600').then(reg => {
+            navigator.serviceWorker.register('./sw.js?v=700').then(reg => {
                 if (reg.waiting) {
                     newWorker = reg.waiting;
                     document.getElementById('update-banner').style.display = 'flex';
@@ -735,24 +736,41 @@
         }
     }
 
-    function toggleGrandmaMode(e) {
-    e.stopPropagation();
-    const wasPlaying = !music.paused || !gMusic.paused;
-    isGrandmaMode = !isGrandmaMode;
-    
-    showToast(isGrandmaMode ? "Grandma Mode: Activated" : "Grandma Mode: Deactivated", isGrandmaMode ? "👵" : "✨", 2500);
-    
-    if (isGrandmaMode) {
-        // Apply filter to HTML instead of BODY to prevent breaking fixed positions
-        document.documentElement.style.filter = "grayscale(1) sepia(0.2)"; 
-        music.pause();
-        if(wasPlaying) { gMusic.currentTime = 0; gMusic.play(); }
-    } else {
-        document.documentElement.style.filter = "none";
-        gMusic.pause();
-        if(wasPlaying) { music.play(); }
+    /* --- FIXED MUSIC LOGIC --- */
+    function toggleMusic() {
+        const musicIcon = document.getElementById('musicToggle');
+        const activeTrack = isGrandmaMode ? gMusic : music;
+        const inactiveTrack = isGrandmaMode ? music : gMusic;
+
+        if (activeTrack.paused) {
+            activeTrack.play();
+            inactiveTrack.pause();
+            musicIcon.innerHTML = "🎵";
+        } else {
+            activeTrack.pause();
+            musicIcon.innerHTML = "🔇";
+        }
     }
-}
+
+    function toggleGrandmaMode(e) {
+        e.stopPropagation();
+        const musicIcon = document.getElementById('musicToggle');
+        const wasPlaying = !music.paused || !gMusic.paused;
+        
+        isGrandmaMode = !isGrandmaMode;
+        
+        showToast(isGrandmaMode ? "Grandma Mode: Activated" : "Grandma Mode: Deactivated", isGrandmaMode ? "👵" : "✨", 2500);
+        
+        if (isGrandmaMode) {
+            document.documentElement.style.filter = "grayscale(1) sepia(0.2)"; 
+            music.pause();
+            if(wasPlaying) { gMusic.currentTime = 0; gMusic.play(); musicIcon.innerHTML = "🎵"; }
+        } else {
+            document.documentElement.style.filter = "none";
+            gMusic.pause();
+            if(wasPlaying) { music.play(); musicIcon.innerHTML = "🎵"; }
+        }
+    }
 
     function revealSecret(e) { e.stopPropagation(); showToast("Wait, you actually found the hidden heart?!.. Neee pwoliiii anneeee mwolleee...Happy Birthday again, Miku Madam!", "💖", 5000); }
 
@@ -922,4 +940,3 @@
 </script>
 </body>
 </html>
-
